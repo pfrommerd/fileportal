@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 public class PulloutTabPanel extends JPanel implements MouseListener {
@@ -16,8 +17,10 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 	
 	public PulloutTabPanel(PortalApp app) {
 		m_app = app;
-		setBackground(Color.WHITE);
 		setForeground(Color.WHITE);
+		setBackground(Color.WHITE);
+		setBorder(BorderFactory.createMatteBorder(0, 0, 0, PortalApp.DIVIDER_THICKNESS, PortalApp.DIVIDER_COLOR));
+
 		addMouseListener(this);
 	}
 	@Override

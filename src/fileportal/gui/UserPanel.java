@@ -22,8 +22,6 @@ public class UserPanel extends JPanel {
 	
 	private boolean m_hovering = false;
 	
-	private int m_textHeight = 30;
-	
 	private User m_user;
 	
 	public UserPanel(User u) {
@@ -42,6 +40,8 @@ public class UserPanel extends JPanel {
 		FontMetrics fontMetrics = g2d.getFontMetrics(); 
 		int textWidth = fontMetrics.stringWidth(m_user.getName());
 		
+		g2d.setColor(PortalApp.FONT_COLOR);
+		g2d.setFont(PortalApp.FONT);
 		g2d.drawString(m_user.getName(), halfWidth - (textWidth >> 1), 
 									PortalApp.USER_ICON_HEIGHT + 
 									PortalApp.USER_NAME_SPACING +
@@ -50,13 +50,13 @@ public class UserPanel extends JPanel {
 		
 		//Draw the image of the user
 		BufferedImage icon = m_user.getIcon();
-		
+		if (icon == null) icon = PortalApp.DEFAULT_USER_ICON;
 		int halfIconWidth = PortalApp.USER_ICON_WIDTH >> 1;
-		
+
 		g2d.setClip(new Ellipse2D.Double(halfWidth - halfIconWidth, 0,
-										PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT));
+				PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT));
 		g2d.drawImage(icon, halfWidth - halfIconWidth, 0,
-						PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, null);
+				PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, null);
 		g2d.setClip(null);
 	}
 	@Override
