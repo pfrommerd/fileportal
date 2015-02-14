@@ -18,6 +18,7 @@ public class LANUser implements User {
 	private String m_name;
 	private BufferedImage m_icon;
 	private InetAddress m_address;
+	private long m_lastTime;
 
 	public LANUser(String name) {
 		m_name = name;
@@ -34,6 +35,21 @@ public class LANUser implements User {
 
 	public InetAddress getAddress() {
 		return m_address;
+	}
+
+	/**
+	 * @return the last time a broadcast packet was received from the user
+	 */
+	public long getLastConnectionTime() {
+		return m_lastTime;
+	}
+
+	/**
+	 * @param lastTime
+	 *            the last time a broadcast packet was received from the user
+	 */
+	public void setLastBroadcastTime(long lastTime) {
+		m_lastTime = lastTime;
 	}
 
 	@Override

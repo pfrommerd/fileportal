@@ -12,9 +12,9 @@ import fileportal.net.lan.LANUser;
 
 public class Main {
 	public static void main(String[] args) {
-		LANUser user = new LANUser("test");
+		LANUser user = new LANUser("test2");
 		LANDiscoverer disc = new LANDiscoverer(user);
-		LANBroadcaster broad = new LANBroadcaster(new LANUser("test"));
+		LANBroadcaster broad = new LANBroadcaster(user);
 		try {
 			IconServer icon = new IconServer(ImageIO.read(Main.class
 					.getResource("logo.png")));
