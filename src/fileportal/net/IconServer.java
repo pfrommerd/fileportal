@@ -12,9 +12,9 @@ public class IconServer {
 	private BufferedImage m_icon;
 	private Thread m_serveThread;
 
-	public IconServer(BufferedImage icon, int port) {
+	public IconServer(BufferedImage icon) {
 		try {
-			m_sock = new ServerSocket(port);
+			m_sock = new ServerSocket(NetworkConstants.ICON_PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,6 +39,7 @@ public class IconServer {
 					Socket sock = m_sock.accept();
 					ImageIO.write(m_icon, "png", sock.getOutputStream());
 					sock.close();
+					System.out.println("IconServer: sent icon!");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
