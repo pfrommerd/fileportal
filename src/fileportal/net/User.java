@@ -2,15 +2,58 @@ package fileportal.net;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface User {
-	public String getName();
+public class User {
+	private String m_name;
+	private BufferedImage m_icon;
 
-	public void setName(String name);
+	private List<UserDriver> m_drivers = new ArrayList<UserDriver>();
 
-	public BufferedImage getIcon();
+	public User(String name) {
+		m_name = name;
+	}
 
-	public void setIcon(BufferedImage icon);
+	public User(String name, BufferedImage icon) {
+		m_name = name;
+		m_icon = icon;
+	}
 
-	public void sendFiles(File[] files);
+	public String getName() {
+		return m_name;
+	}
+
+	public void setName(String name) {
+		m_name = name;
+	}
+
+	public BufferedImage getIcon() {
+		return m_icon;
+	}
+
+	public void setIcon(BufferedImage icon) {
+		m_icon = icon;
+	}
+
+	public void addDriver(UserDriver driver) {
+		driver.setUser(this);
+		m_drivers.add(driver);
+	}
+
+	public void removeDriver(UserDriver driver) {
+		driver.setUser(null);
+		m_drivers.remove(driver);
+	}
+
+	/**
+	 * @param files
+	 * @return true if success, false if not
+	 */
+	public boolean sendFiles(File[] files) {
+		if (m_drivers.size() == 0) {
+			return false;
+		}
+		return m_drivers.get(0).sendFiles(files);
+	}
 }

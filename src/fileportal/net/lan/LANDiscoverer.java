@@ -21,12 +21,12 @@ import fileportal.net.User;
 
 public class LANDiscoverer implements Discoverer {
 	private List<DiscoverHandler> m_handlers = new ArrayList<DiscoverHandler>();
-	private List<LANUser> m_connected = new ArrayList<LANUser>();
-	private Map<LANUser, LANTimeout> m_timeouts = new HashMap<LANUser, LANTimeout>();
+	private List<User> m_connected = new ArrayList<User>();
+	private Map<User, LANTimeout> m_timeouts = new HashMap<User, LANTimeout>();
 	private DatagramSocket m_sock;
 	private Thread m_listener;
 
-	public LANDiscoverer(LANUser thisUser) {
+	public LANDiscoverer(User thisUser) {
 		try {
 			m_sock = new DatagramSocket(NetworkConstants.BROADCAST_LISTEN_PORT,
 					InetAddress.getByName("0.0.0.0"));
@@ -53,8 +53,8 @@ public class LANDiscoverer implements Discoverer {
 		return false;
 	}
 
-	public LANUser getUserForName(String userName) {
-		for (LANUser user : m_connected) {
+	public User getUserForName(String userName) {
+		for (User user : m_connected) {
 			if (user.getName().equals(userName)) {
 				return user;
 			}
@@ -62,7 +62,7 @@ public class LANDiscoverer implements Discoverer {
 		return null;
 	}
 
-	protected void userTimeout(LANUser user) {
+	protected void userTimeout(User user) {
 		System.out.println("User timeout: " + user);
 		m_connected.remove(user);
 	}
@@ -103,11 +103,9 @@ public class LANDiscoverer implements Discoverer {
 					if (message.contains("User: ")) {
 						String name = message.substring(6);
 						if (isConnected(name)) {
-							LANUser user = getUserForName(name);
+							User user = getUserForName(name);
 							if (m_timeouts.containsKey(user)) {
 								m_timeouts.get(user).reset();
-								getUserForName(name).setLastBroadcastTime(
-										System.currentTimeMillis());
 							}
 
 							System.out.println("LANDiscoverer: User " + name
@@ -117,13 +115,13 @@ public class LANDiscoverer implements Discoverer {
 						System.out.println("LANDiscoverer: User " + name
 								+ " is not connected!");
 
-						LANUser user = new LANUser(name);
-						user.setAddress(packet.getAddress());
-						user.setLastBroadcastTime(System.currentTimeMillis());
+						User user = new User(name);
+						LANDriver driver = new LANDriver(packet.getAddress());
+						user.addDriver(driver);
 						m_timeouts.put(user, new LANTimeout(user,
 								LANDiscoverer.this));
 
-						Socket iconSock = new Socket(user.getAddress(),
+						Socket iconSock = new Socket(packet.getAddress(),
 								NetworkConstants.ICON_PORT);
 						user.setIcon(ImageIO.read(iconSock.getInputStream()));
 						iconSock.close();

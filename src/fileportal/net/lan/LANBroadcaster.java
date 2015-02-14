@@ -13,13 +13,14 @@ import javax.swing.Timer;
 
 import fileportal.net.Broadcaster;
 import fileportal.net.NetworkConstants;
+import fileportal.net.User;
 
 public class LANBroadcaster implements Broadcaster {
-	private LANUser m_user;
+	private User m_user;
 	private DatagramSocket m_sock;
 	private Timer m_timer;
 
-	public LANBroadcaster(LANUser user) {
+	public LANBroadcaster(User user) {
 		m_user = user;
 	}
 

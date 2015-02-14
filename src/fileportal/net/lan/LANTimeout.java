@@ -4,13 +4,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fileportal.net.NetworkConstants;
+import fileportal.net.User;
 
 public class LANTimeout {
-	private LANUser m_user;
+	private User m_user;
 	private LANDiscoverer m_disc;
 	private Timer m_timer;
 
-	public LANTimeout(LANUser user, LANDiscoverer discoverer) {
+	public LANTimeout(User user, LANDiscoverer discoverer) {
 		m_user = user;
 		m_disc = discoverer;
 		m_timer = new Timer();
