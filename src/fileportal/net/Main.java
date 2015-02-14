@@ -8,11 +8,10 @@ import javax.imageio.ImageIO;
 
 import fileportal.net.lan.LANBroadcaster;
 import fileportal.net.lan.LANDiscoverer;
-import fileportal.net.lan.LANUser;
 
 public class Main {
 	public static void main(String[] args) {
-		LANUser user = new LANUser("test2");
+		User user = new User("test2");
 		LANDiscoverer disc = new LANDiscoverer(user);
 		LANBroadcaster broad = new LANBroadcaster(user);
 		try {

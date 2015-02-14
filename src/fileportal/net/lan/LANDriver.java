@@ -1,6 +1,5 @@
 package fileportal.net.lan;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,68 +11,21 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 import fileportal.net.NetworkConstants;
-import fileportal.net.User;
+import fileportal.net.UserDriver;
 
-public class LANUser implements User {
-	private String m_name;
-	private BufferedImage m_icon;
+public class LANDriver extends UserDriver {
 	private InetAddress m_address;
-	private long m_lastTime;
 
-	public LANUser(String name) {
-		m_name = name;
-	}
-
-	public LANUser(String name, BufferedImage icon) {
-		m_name = name;
-		m_icon = icon;
-	}
-
-	public void setAddress(InetAddress address) {
+	public LANDriver(InetAddress address) {
 		m_address = address;
 	}
 
-	public InetAddress getAddress() {
-		return m_address;
-	}
-
-	/**
-	 * @return the last time a broadcast packet was received from the user
-	 */
-	public long getLastConnectionTime() {
-		return m_lastTime;
-	}
-
-	/**
-	 * @param lastTime
-	 *            the last time a broadcast packet was received from the user
-	 */
-	public void setLastBroadcastTime(long lastTime) {
-		m_lastTime = lastTime;
-	}
-
 	@Override
-	public String getName() {
-		return m_name;
-	}
+	public boolean sendFiles(File[] files) {
+		if (getUser() == null) {
+			throw new RuntimeException("No user set on driver!");
+		}
 
-	@Override
-	public void setName(String name) {
-		m_name = name;
-	}
-
-	@Override
-	public BufferedImage getIcon() {
-		return m_icon;
-	}
-
-	@Override
-	public void setIcon(BufferedImage icon) {
-		m_icon = icon;
-	}
-
-	@Override
-	public void sendFiles(File[] files) {
 		try {
 			Socket sock = new Socket(m_address, NetworkConstants.FILE_PORT);
 			for (File f : files) {
@@ -81,7 +33,8 @@ public class LANUser implements User {
 				PrintWriter writer = new PrintWriter(sock.getOutputStream());
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(sock.getInputStream()));
-				writer.write(m_name + "---div---" + f.getName() + "\n");
+				writer.write(getUser().getName() + "---div---" + f.getName()
+						+ "\n");
 				writer.flush();
 
 				String response = reader.readLine();
@@ -100,8 +53,10 @@ public class LANUser implements User {
 				}
 			}
 			sock.close();
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 }
