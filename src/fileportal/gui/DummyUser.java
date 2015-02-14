@@ -32,8 +32,21 @@ public class DummyUser implements User {
 	}
 
 	@Override
-	public void sendFile(File file) {
-		System.out.println("Sending file: " + file.getAbsolutePath());
+	public void setName(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setIcon(BufferedImage icon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendFiles(File[] files) {
+		for (File f : files)
+			System.out.println("Sending file: " + f.getAbsolutePath());
 	}
 
 }

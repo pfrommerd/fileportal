@@ -105,10 +105,7 @@ public class UserPanel extends JPanel {
             } 
             catch (Exception e) { return false; }
             
-            //TODO: Change to user having a list of files
-            for (File f : data) {
-            	m_user.sendFile(f);
-            }
+            m_user.sendFiles(data.toArray(new File[0]));
             
             return true;
         }
