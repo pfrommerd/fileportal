@@ -12,5 +12,5 @@ public interface ReceiverHandler {
 	 */
 	public boolean requestReceived(String user, String name);
 
-	public void fileReceived(File file);
+	public File getFileSaveLocation(String name);
 }

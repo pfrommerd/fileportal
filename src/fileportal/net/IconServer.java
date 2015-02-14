@@ -14,7 +14,7 @@ public class IconServer {
 
 	public IconServer(BufferedImage icon) {
 		try {
-			m_sock = new ServerSocket(ProgramConstants.ICON_PORT);
+			m_sock = new ServerSocket(NetworkConstants.ICON_PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

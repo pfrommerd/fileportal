@@ -1,14 +1,16 @@
 package fileportal.net;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class FileReceiverServer {
-	private ServerSocket m_sock;
+	private ServerSocket m_serverSock;
 	private ReceiverHandler m_handler;
 	private Thread m_serverThread;
 
@@ -16,7 +18,7 @@ public class FileReceiverServer {
 		m_handler = handler;
 
 		try {
-			m_sock = new ServerSocket(ProgramConstants.FILE_PORT);
+			m_serverSock = new ServerSocket(NetworkConstants.FILE_PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +39,7 @@ public class FileReceiverServer {
 		public void run() {
 			while (true) {
 				try {
-					Socket sock = m_sock.accept();
+					Socket sock = m_serverSock.accept();
 					System.out
 							.println("FileReceiver: somebody wants to drop a file");
 					Thread t = new Thread(new ClientHandler(sock));
@@ -75,6 +77,14 @@ public class FileReceiverServer {
 					writer.write("accept\n");
 					writer.flush();
 					System.out.println("FileReceiver: Accepting file");
+
+					ObjectInputStream ois = new ObjectInputStream(
+							m_sock.getInputStream());
+					byte[] file = (byte[]) ois.readObject();
+					FileOutputStream fos = new FileOutputStream(
+							m_handler.getFileSaveLocation(fileName));
+					fos.write(file);
+					fos.close();
 				} else {
 					writer.write("denied\n");
 					writer.flush();
@@ -83,6 +93,8 @@ public class FileReceiverServer {
 
 				m_sock.close();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		}

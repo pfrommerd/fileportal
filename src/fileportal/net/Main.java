@@ -12,7 +12,8 @@ import fileportal.net.lan.LANUser;
 
 public class Main {
 	public static void main(String[] args) {
-		LANDiscoverer disc = new LANDiscoverer();
+		LANUser user = new LANUser("test");
+		LANDiscoverer disc = new LANDiscoverer(user);
 		LANBroadcaster broad = new LANBroadcaster(new LANUser("test"));
 		try {
 			IconServer icon = new IconServer(ImageIO.read(Main.class
@@ -29,8 +30,8 @@ public class Main {
 					}
 
 					@Override
-					public void fileReceived(File file) {
-
+					public File getFileSaveLocation(String name) {
+						return new File("/Users/sam/Desktop/" + name);
 					}
 				});
 		server.start();

@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import javax.swing.Timer;
 
 import fileportal.net.Broadcaster;
-import fileportal.net.ProgramConstants;
+import fileportal.net.NetworkConstants;
 
 public class LANBroadcaster implements Broadcaster {
 	private LANUser m_user;
@@ -32,7 +32,7 @@ public class LANBroadcaster implements Broadcaster {
 			e.printStackTrace();
 		}
 
-		m_timer = new Timer(ProgramConstants.BROADCAST_DELAY, new Broadcaster());
+		m_timer = new Timer(NetworkConstants.BROADCAST_DELAY, new Broadcaster());
 		m_timer.start();
 	}
 
@@ -51,7 +51,7 @@ public class LANBroadcaster implements Broadcaster {
 				DatagramPacket sendPacket = new DatagramPacket(sendData,
 						sendData.length,
 						InetAddress.getByName("255.255.255.255"),
-						ProgramConstants.BROADCAST_LISTEN_PORT);
+						NetworkConstants.BROADCAST_LISTEN_PORT);
 
 				m_sock.send(sendPacket);
 			} catch (UnknownHostException e1) {
