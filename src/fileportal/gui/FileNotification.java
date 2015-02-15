@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
 
 import com.notification.Notification;
@@ -23,7 +24,7 @@ import com.theme.WindowTheme;
 /**
  * An IconNotification displays text, but with an icon.
  */
-public class AcceptNotification extends ComponentNotification {
+public class FileNotification extends ComponentNotification {
 	private TextTheme m_theme;
 
 	private String m_title;
@@ -33,12 +34,16 @@ public class AcceptNotification extends ComponentNotification {
 	private JLabel m_subtitleLabel;
 
 	private JLabel m_iconLabel;
+	
+	private JPanel m_buttonPanel;
+	
+	private JProgressBar m_progressBar;
 
 	private boolean m_accepted = false;
 	
 	public static final int ICON_PADDING = 10;
 
-	public AcceptNotification(BufferedImage icon, String msg, String subMsg) {
+	public FileNotification(BufferedImage icon, String msg, String subMsg) {
 		Image img = icon;
 		if (icon.getWidth() != 64 || icon.getHeight() != 64) {
 			img = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
@@ -53,8 +58,8 @@ public class AcceptNotification extends ComponentNotification {
 		panel.add(m_subtitleLabel, BorderLayout.CENTER);
 		panel.setBorder(new EmptyBorder(0, ICON_PADDING, 0, 0));
 		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout());
+		m_buttonPanel = new JPanel();
+		m_buttonPanel.setLayout(new FlowLayout());
 		
 		JButton accept = new JButton("Accept");
 		JButton decline = new JButton("Decline");
@@ -63,8 +68,8 @@ public class AcceptNotification extends ComponentNotification {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				m_accepted = true;
-				synchronized(AcceptNotification.this) {
-					AcceptNotification.this.notifyAll();
+				synchronized(FileNotification.this) {
+					FileNotification.this.notifyAll();
 				}
 			}
 		});
@@ -72,18 +77,18 @@ public class AcceptNotification extends ComponentNotification {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				m_accepted = false;
-				synchronized(AcceptNotification.this) {
-					AcceptNotification.this.notifyAll();
+				synchronized(FileNotification.this) {
+					FileNotification.this.notifyAll();
 				}
 			}
 		});
 		
-		buttonPanel.add(decline);
-		buttonPanel.add(accept);
+		m_buttonPanel.add(decline);
+		m_buttonPanel.add(accept);
 		
 		addComponent(m_iconLabel, BorderLayout.WEST);
 		addComponent(panel, BorderLayout.CENTER);
-		addComponent(buttonPanel, BorderLayout.SOUTH);
+		addComponent(m_buttonPanel, BorderLayout.SOUTH);
 		
 		setSize(300, 125);
 	}
@@ -137,16 +142,28 @@ public class AcceptNotification extends ComponentNotification {
 		}
 		return m_accepted;
 	}
+	
+	//Will switch to transfer mode
+	public void showTransfer() {
+		m_progressBar = new JProgressBar(0, 100);
 
-	public static class AcceptNotificationBuilder implements
+		removeComponent(m_buttonPanel);
+		addComponent(m_progressBar, BorderLayout.SOUTH);
+	}
+	
+	public void setTransferPercentage(float percent) {
+		m_progressBar.setValue((int) percent);
+	}
+	
+	public static class FileNotificationBuilder implements
 							NotificationBuilder {
 		@Override
 		public Notification buildNotification(ThemePackage pack, Object[] args) {
-			AcceptNotification note = null;
+			FileNotification note = null;
 			if (args.length != 0) {
-				note = new AcceptNotification((BufferedImage) args[0], (String) args[1], (String) args[2]);
+				note = new FileNotification((BufferedImage) args[0], (String) args[1], (String) args[2]);
 			} else {
-				note = new AcceptNotification(PortalApp.DEFAULT_USER_ICON, "Accept", "");
+				note = new FileNotification(PortalApp.DEFAULT_USER_ICON, "Accept", "");
 			}
 			note.setWindowTheme(pack.windowTheme);
 			return note;

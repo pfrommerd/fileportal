@@ -41,8 +41,8 @@ public class ProfileBar extends JPanel {
 		setLayout(new BorderLayout());
 		
 		setBorder(BorderFactory.createMatteBorder(0, 0, PortalApp.DIVIDER_THICKNESS, 0, PortalApp.DIVIDER_COLOR));
-		setForeground(Color.WHITE);
-		setBackground(Color.WHITE);
+		setForeground(PortalApp.BACKGROUND_COLOR);
+		setBackground(PortalApp.BACKGROUND_COLOR);
 		
 		//Downscale the icon
 		Image img = u.getIcon().getScaledInstance(PortalApp.PROFILE_BAR_HEIGHT, PortalApp.PROFILE_BAR_HEIGHT, Image.SCALE_SMOOTH);
@@ -156,8 +156,8 @@ public class ProfileBar extends JPanel {
 		private static final long serialVersionUID = 1L;
 		
 		public ExitPanel() {
-			setForeground(Color.WHITE);
-			setBackground(Color.WHITE);
+			setForeground(PortalApp.BACKGROUND_COLOR);
+			setBackground(PortalApp.BACKGROUND_COLOR);
 			
 			addMouseListener(this);
 		}

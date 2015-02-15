@@ -133,7 +133,7 @@ public class FileReceiverServer {
 					writer.write("accept\n");
 					writer.flush();
 
-					TransferTracker tracker = new TransferTracker(0);
+					final TransferTracker tracker = new TransferTracker(0);
 					m_handler.setProgressTracker(tracker);
 
 					Thread t = new Thread(new Runnable() {
