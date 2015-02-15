@@ -54,10 +54,10 @@ public class Main {
 				try {
 					File test = new File(this.getClass().getResource("lan")
 							.toURI());
-					File logo = new File(this.getClass()
+					File test2 = new File(this.getClass()
 							.getResource("logo.png").toURI());
 					TransferTracker track = user.sendFiles(new File[] { test,
-							logo });
+							test2 });
 					while (!track.isFinished()) {
 						System.out.println(track.getPercentage());
 					}

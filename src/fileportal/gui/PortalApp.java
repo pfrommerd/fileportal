@@ -187,10 +187,25 @@ public class PortalApp extends JFrame {
 
 	public void hidePanel() {
 		while (isPanelShowing()) {
+			int panelX = getX() + TAB_WIDTH;
+			int desX = SCREEN_WIDTH;
+			int delta = desX - panelX;
+			int moveX = delta / 5;
+			System.out.println(delta);
+			if (delta < 5) {
+				moveX = 1;
+			}
+
 			// Move to the right
-			setLocation(getX() + MOVE_SPEED, getY());
+			setLocation(getX() + moveX, getY());
 			repaint();
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+		System.out.println("Done hiding");
 	}
 
 	public void showPanel() {

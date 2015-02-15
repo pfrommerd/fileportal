@@ -92,6 +92,8 @@ public class FileReceiverServer {
 
 			while (entry != null) {
 				File saveFile = new File(saveLoc, entry.getName());
+				System.out.println("FileReceiver: Unzipping: "
+						+ entry.getName());
 
 				File parent = new File(saveFile.getParent());
 

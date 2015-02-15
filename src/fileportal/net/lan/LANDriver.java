@@ -26,6 +26,7 @@ public class LANDriver extends UserDriver {
 
 	private void recursiveZip(String root, File file, ZipOutputStream zos,
 			TransferTracker tracker) throws FileNotFoundException {
+		System.out.println("LANDriver: zipping file: " + file.getName());
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
 
@@ -51,6 +52,7 @@ public class LANDriver extends UserDriver {
 
 				fis.close();
 				zos.closeEntry();
+				zos.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
