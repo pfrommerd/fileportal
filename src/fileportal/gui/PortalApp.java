@@ -325,19 +325,46 @@ public class PortalApp extends JFrame {
 					public void fileReceived(FileReceive receive) {
 						User user = disc.getUserForName(receive.getFromUser());
 
+						String message = null;
+						if (receive.isIsSingleFile()) {
+							message = receive.getFileName() + " from "
+									+ receive.getFromUser();
+						} else {
+							message = receive.getNumFiles() + " files from "
+									+ receive.getFromUser();
+						}
+
 						FileNotification note = (FileNotification) noteFactory
 								.build("accept",
 										user.getIcon(),
 										"Accept files from "
 												+ receive.getFromUser(),
-										receive.getFileName() + " from "
-												+ receive.getFromUser());
+										message);
 						noteManager.addNotification(note, Time.infinite());
 
 						boolean accept = note.getAccept();
 						note.showTransfer();
 
-						TransferTracker tracker = new TransferTracker(0);
+						TransferTracker tracker = new TransferTracker(0) {
+							private int lastPercent = 0;
+
+							@Override
+							public void setPercentage(double percentage) {
+								super.setPercentage(percentage);
+
+								int percent = (int) percentage;
+								if (percent - lastPercent < 1)
+									return;
+
+								if (percent >= 99)
+									note.hide();
+								else
+									note.setTransferPercentage((float) percent);
+
+								lastPercent = percent;
+
+							}
+						};
 						receive.addProgressTracker(tracker);
 
 						if (accept) {
@@ -345,14 +372,8 @@ public class PortalApp extends JFrame {
 									.getProperty("user.home") + "/Desktop/"));
 						} else {
 							receive.decline();
+							note.hide();
 						}
-
-						while (tracker.getPercentage() < 100) {
-							note.setTransferPercentage((float) tracker
-									.getPercentage());
-						}
-
-						note.hide();
 					}
 				});
 		server.start();
