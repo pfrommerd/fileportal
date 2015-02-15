@@ -69,7 +69,7 @@ public class FileReceiverServer {
 			int len;
 			while ((len = zip.read(buffer)) > 0) {
 				fos.write(buffer, 0, len);
-				read += 1024;
+				read += len;
 
 				tracker.setPercentage((double) 100 * read / totalSize);
 				System.out.println("Read: " + read);

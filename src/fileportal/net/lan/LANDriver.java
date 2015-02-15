@@ -68,7 +68,7 @@ public class LANDriver extends UserDriver {
 				int len;
 				while ((len = fis.read(buffer)) > 0) {
 					zos.write(buffer, 0, len);
-					m_totalRead += 1024;
+					m_totalRead += len;
 
 					tracker.setPercentage((double) 100 * m_totalRead
 							/ m_totalSize);
