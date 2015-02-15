@@ -127,6 +127,8 @@ public class LANDiscoverer implements Discoverer {
 
 						System.out.println("LANDiscoverer: User discovered: "
 								+ user.getName());
+						System.out.println("LANDiscoverer: User discovered: "
+								+ user);
 
 						m_connected.add(user);
 						for (DiscoverHandler handler : m_handlers) {

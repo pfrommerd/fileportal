@@ -23,6 +23,11 @@ public class User {
 		m_icon = icon;
 	}
 
+	public User() {
+		m_name = "";
+		m_icon = null;
+	}
+
 	public String getName() {
 		return m_name;
 	}
