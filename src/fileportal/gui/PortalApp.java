@@ -93,6 +93,8 @@ public class PortalApp extends JFrame {
 	public static final Color FONT_COLOR = Color.GRAY;
 	public static final Color TRANSFER_COLOR = Color.BLUE;
 
+	public static final Color EXIT_BUTTON_COLOR = Color.RED;
+	
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
 
@@ -228,8 +230,6 @@ public class PortalApp extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		
-		
 		User user = null;
 		
 		try {

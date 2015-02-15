@@ -125,12 +125,11 @@ public class UserPanel extends JPanel {
 		if (m_currentTransfer != null) {
 			g2d.setColor(PortalApp.TRANSFER_COLOR);
 			int deg = (int) (m_currentTransfer.getPercentage() / 100 * 360);
-			System.out.println(deg);
 			g2d.fillArc(-((PortalApp.LOADING_ARC_RADIUS - PortalApp.USER_ICON_WIDTH) >> 1),
 						-((PortalApp.LOADING_ARC_RADIUS - PortalApp.USER_ICON_HEIGHT) >> 1), 
 						PortalApp.LOADING_ARC_RADIUS, PortalApp.LOADING_ARC_RADIUS, 
-						0, 
-						deg);
+						90, 
+						-deg);
 			if (m_currentTransfer.getPercentage() >= 100) {
 				m_currentTransfer = null;
 			}
