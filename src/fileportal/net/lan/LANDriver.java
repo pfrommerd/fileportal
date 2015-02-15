@@ -117,7 +117,7 @@ public class LANDriver extends UserDriver {
 		if (getUser() == null) {
 			throw new RuntimeException("No user set on driver!");
 		}
-		TransferTracker tracker = new TransferTracker(0);
+		final TransferTracker tracker = new TransferTracker(0);
 
 		try {
 			final Socket sock = new Socket(m_address,
