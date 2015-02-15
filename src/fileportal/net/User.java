@@ -48,11 +48,11 @@ public class User {
 
 	/**
 	 * @param files
-	 * @return true if success, false if not
+	 * @return a TransferTracker
 	 */
-	public boolean sendFiles(File[] files) {
+	public TransferTracker sendFiles(File[] files) {
 		if (m_drivers.size() == 0) {
-			return false;
+			return null;
 		}
 		return m_drivers.get(0).sendFiles(files);
 	}

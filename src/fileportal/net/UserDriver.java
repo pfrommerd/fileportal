@@ -15,7 +15,7 @@ public abstract class UserDriver {
 
 	/**
 	 * @param files
-	 * @return true if success, false if not
+	 * @return a status tracker
 	 */
-	public abstract boolean sendFiles(File[] files);
+	public abstract TransferTracker sendFiles(File[] files);
 }

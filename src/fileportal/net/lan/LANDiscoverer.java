@@ -65,6 +65,9 @@ public class LANDiscoverer implements Discoverer {
 	protected void userTimeout(User user) {
 		System.out.println("User timeout: " + user);
 		m_connected.remove(user);
+		for (DiscoverHandler handler : m_handlers) {
+			handler.userDisconnected(user);
+		}
 	}
 
 	@Override

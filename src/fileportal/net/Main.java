@@ -19,7 +19,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		LANDiscoverer disc = new LANDiscoverer(new User("Foobar"));
+		LANDiscoverer disc = new LANDiscoverer(user);
 		LANBroadcaster broad = new LANBroadcaster(user);
 		LANIconServer icon = new LANIconServer(user);
 		icon.start();
@@ -51,11 +51,14 @@ public class Main {
 			@Override
 			public void userDiscovered(User user) {
 				try {
-					user.sendFiles(new File[] {
-							new File(this.getClass().getResource("test.txt")
-									.toURI()),
-							new File(this.getClass().getResource("logo.png")
-									.toURI()) });
+					File test = new File(this.getClass()
+							.getResource("tron.dmg").toURI());
+					File logo = new File(this.getClass()
+							.getResource("logo.png").toURI());
+					TransferTracker track = user.sendFiles(new File[] { test });
+					while (!track.isFinished()) {
+						System.out.println(track.getPercentage());
+					}
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}
