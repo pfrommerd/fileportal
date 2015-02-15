@@ -110,6 +110,7 @@ public class FileReceiverServer {
 				if (request.indexOf("Single: ") == 0) {
 					String[] parts = request.substring(8).split("---div---");
 					String user = parts[0];
+					System.out.println("Got user: " + user);
 					String fileName = parts[1];
 
 					accept = m_handler.shouldAccept(user, fileName);

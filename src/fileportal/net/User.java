@@ -70,13 +70,15 @@ public class User {
 
 	/**
 	 * @param files
+	 * @param from
+	 *            user that is sending the files
 	 * @return a TransferTracker
 	 */
-	public TransferTracker sendFiles(File[] files) {
+	public TransferTracker sendFiles(File[] files, User from) {
 		if (m_drivers.size() == 0) {
 			return null;
 		}
-		return m_drivers.get(0).sendFiles(files, this);
+		return m_drivers.get(0).sendFiles(files, from);
 	}
 
 	public interface UserListener {

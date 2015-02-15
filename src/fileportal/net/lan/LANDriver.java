@@ -95,6 +95,7 @@ public class LANDriver extends UserDriver {
 						ZipOutputStream zos = new ZipOutputStream(
 								sock.getOutputStream());
 						if (files.length == 1) {
+							System.out.println(from.getName());
 							writer.write("Single: " + from.getName()
 									+ "---div---" + files[0].getName() + "\n");
 							writer.flush();

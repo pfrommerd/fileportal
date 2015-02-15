@@ -57,7 +57,7 @@ public class Main {
 					File test2 = new File(this.getClass()
 							.getResource("logo.png").toURI());
 					TransferTracker track = user.sendFiles(new File[] { test,
-							test2 });
+							test2 }, user);
 
 					System.out.println("PRINTING PERCENTAGES");
 					while (!track.isFinished()) {
