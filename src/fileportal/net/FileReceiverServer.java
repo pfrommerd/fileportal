@@ -73,11 +73,14 @@ public class FileReceiverServer {
 			fos.close();
 		}
 
-		private void readFiles() throws IOException {
+		private void readFiles(long totalSize, TransferTracker tracker)
+				throws IOException {
 			File saveLoc = m_handler.getFolderSaveLocation();
 
 			ZipInputStream zip = new ZipInputStream(m_sock.getInputStream());
 			ZipEntry entry = zip.getNextEntry();
+
+			long read = 0;
 
 			while (entry != null) {
 				File saveFile = new File(saveLoc, entry.getName());
@@ -90,6 +93,8 @@ public class FileReceiverServer {
 					parent.mkdirs();
 
 				readFile(zip, saveFile);
+				read += saveFile.length();
+				tracker.setPercentage((double) 100 * read / totalSize);
 
 				zip.closeEntry();
 
@@ -106,27 +111,41 @@ public class FileReceiverServer {
 				PrintWriter writer = new PrintWriter(m_sock.getOutputStream());
 
 				String request = reader.readLine();
+				System.out.println("FileReceiver: Got request: " + request);
 				boolean accept = false;
+				String[] parts = new String[3];
 				if (request.indexOf("Single: ") == 0) {
-					String[] parts = request.substring(8).split("---div---");
-					String user = parts[0];
-					System.out.println("Got user: " + user);
-					String fileName = parts[1];
-
-					accept = m_handler.shouldAccept(user, fileName);
+					parts = request.substring(8).split("---div---");
 				} else if (request.indexOf("Multiple: ") == 0) {
-					String[] parts = request.substring(10).split("---div---");
-					String user = parts[0];
-					String fileNum = parts[1];
-
-					accept = m_handler.shouldAccept(user, fileNum);
+					parts = request.substring(10).split("---div---");
+				}
+				String user = parts[0];
+				String fileNameOrNum = parts[1];
+				final long size = Long.parseLong(parts[2]);
+				if (request.indexOf("Single: ") == 0) {
+					accept = m_handler.shouldAccept(user, fileNameOrNum);
+				} else if (request.indexOf("Multiple: ") == 0) {
+					accept = m_handler.shouldAccept(user,
+							Integer.parseInt(fileNameOrNum));
 				}
 
 				if (accept) {
 					writer.write("accept\n");
 					writer.flush();
 
-					readFiles();
+					TransferTracker tracker = new TransferTracker(0);
+					m_handler.setProgressTracker(tracker);
+
+					Thread t = new Thread(new Runnable() {
+						public void run() {
+							try {
+								readFiles(size, tracker);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					t.start();
 				} else {
 					writer.write("denied\n");
 					writer.flush();

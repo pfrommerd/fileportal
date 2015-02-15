@@ -24,4 +24,6 @@ public interface ReceiverHandler {
 	public File getFileSaveLocation(String name);
 
 	public File getFolderSaveLocation();
+
+	public void setProgressTracker(TransferTracker tracker);
 }

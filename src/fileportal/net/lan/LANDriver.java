@@ -35,6 +35,16 @@ public class LANDriver extends UserDriver {
 		return length;
 	}
 
+	public static long sizeOf(File[] files) {
+		long length = 0;
+
+		for (File f : files) {
+			length += sizeOf(f);
+		}
+
+		return length;
+	}
+
 	private long m_totalSize = 0;
 	private long m_totalRead = 0;
 
@@ -94,14 +104,16 @@ public class LANDriver extends UserDriver {
 								new InputStreamReader(sock.getInputStream()));
 						ZipOutputStream zos = new ZipOutputStream(
 								sock.getOutputStream());
+						System.out.println("LANDriver: Writing file(s)");
 						if (files.length == 1) {
-							System.out.println(from.getName());
 							writer.write("Single: " + from.getName()
-									+ "---div---" + files[0].getName() + "\n");
+									+ "---div---" + files[0].getName()
+									+ "---div---" + sizeOf(files) + "\n");
 							writer.flush();
 						} else {
 							writer.write("Multiple: " + from.getName()
-									+ "---div---" + files.length + "\n");
+									+ "---div---" + files.length + "---div---"
+									+ sizeOf(files) + "\n");
 							writer.flush();
 						}
 

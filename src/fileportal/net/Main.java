@@ -45,6 +45,14 @@ public class Main {
 					public boolean shouldAccept(String user, int fileNum) {
 						return true;
 					}
+
+					@Override
+					public void setProgressTracker(TransferTracker tracker) {
+						System.out.println("Main: Receiving Percentages");
+						while (tracker.getPercentage() < 100) {
+							System.out.println("%: " + tracker.getPercentage());
+						}
+					}
 				});
 		server.start();
 		disc.addHandler(new DiscoverHandler() {
@@ -56,13 +64,7 @@ public class Main {
 							.toURI());
 					File test2 = new File(this.getClass()
 							.getResource("logo.png").toURI());
-					TransferTracker track = user.sendFiles(new File[] { test,
-							test2 }, user);
-
-					System.out.println("PRINTING PERCENTAGES");
-					while (!track.isFinished()) {
-						System.out.println(track.getPercentage());
-					}
+					user.sendFiles(new File[] { test, test2 }, user);
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}
