@@ -14,9 +14,11 @@ import fileportal.net.User;
 public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 	private static final long serialVersionUID = 1L;
 	
+	private PortalApp m_app;
 	private HashMap<User, UserPanel> m_panels = new HashMap<User, UserPanel>();
 	
-	public DiscoveryPanel() {
+	public DiscoveryPanel(PortalApp app) {
+		m_app = app;
 		setBorder(BorderFactory.createEmptyBorder(PortalApp.GRID_SPACING, PortalApp.GRID_SPACING, PortalApp.GRID_SPACING, PortalApp.GRID_SPACING));
 		setLayout(new GridLayout(0, 3, PortalApp.GRID_SPACING, PortalApp.GRID_SPACING));
 		
@@ -30,7 +32,7 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 	
 	@Override
 	public void userDiscovered(User user) {
-		UserPanel p = new UserPanel(user);
+		UserPanel p = new UserPanel(m_app, user);
 		m_panels.put(user, p);
 		add(p);
 		

@@ -152,7 +152,7 @@ public class PortalApp extends JFrame {
 
 		subPanel.setLayout(new BorderLayout());
 
-		m_discoveryPanel = new DiscoveryPanel();
+		m_discoveryPanel = new DiscoveryPanel(this);
 
 		JScrollPane scroll = new JScrollPane();
 		scroll.getVerticalScrollBar().setUnitIncrement(SCROLL_SPEED);
@@ -169,6 +169,8 @@ public class PortalApp extends JFrame {
 		add(main);
 		setVisible(true);
 	}
+	
+	public User getUser() { return m_user; }
 
 	public boolean isPanelShowing() {
 		return getX() + TAB_WIDTH < SCREEN_WIDTH;

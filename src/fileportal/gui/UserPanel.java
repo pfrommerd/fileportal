@@ -29,6 +29,8 @@ import fileportal.net.User;
 public class UserPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
+	private PortalApp m_app;
+	
 	//Clip image of the user, updated whenever the user image changes
 	private BufferedImage m_clippedImg = null;
 	//The last user image
@@ -43,7 +45,9 @@ public class UserPanel extends JPanel {
 	
 	private User m_user;
 	
-	public UserPanel(User u) {
+	public UserPanel(PortalApp app, User u) {
+		m_app = app;
+		
 	    new DropTarget(this, new MyDragDropListener());
 
 	    setForeground(Color.WHITE);
