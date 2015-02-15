@@ -63,7 +63,7 @@ public class LANDiscoverer implements Discoverer {
 	}
 
 	protected void userTimeout(User user) {
-		System.out.println("User timeout: " + user);
+		System.out.println("User timeout: " + user.getName());
 		m_connected.remove(user);
 		for (DiscoverHandler handler : m_handlers) {
 			handler.userDisconnected(user);
@@ -111,12 +111,8 @@ public class LANDiscoverer implements Discoverer {
 								m_timeouts.get(user).reset();
 							}
 
-							System.out.println("LANDiscoverer: User " + name
-									+ " is already connected!");
 							continue;
 						}
-						System.out.println("LANDiscoverer: User " + name
-								+ " is not connected!");
 
 						User user = new User(name);
 						LANDriver driver = new LANDriver(packet.getAddress());
@@ -129,8 +125,8 @@ public class LANDiscoverer implements Discoverer {
 						user.setIcon(ImageIO.read(iconSock.getInputStream()));
 						iconSock.close();
 
-						System.out
-								.println("User discovered: " + user.getName());
+						System.out.println("LANDiscoverer: User discovered: "
+								+ user.getName());
 
 						m_connected.add(user);
 						for (DiscoverHandler handler : m_handlers) {

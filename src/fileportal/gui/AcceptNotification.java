@@ -6,7 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.notification.ComponentNotification;
+import com.notification.types.ComponentNotification;
 
 public class AcceptNotification extends ComponentNotification {
 	public AcceptNotification(String text) {
