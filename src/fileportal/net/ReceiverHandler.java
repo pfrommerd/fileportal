@@ -10,7 +10,7 @@ public interface ReceiverHandler {
 	 * @param name
 	 * @return whether the file should be received
 	 */
-	public boolean requestReceived(String user, String name);
+	public boolean shouldAccept(String user, String name);
 
 	/**
 	 * Called when someone wants to drop a number of files.
@@ -19,7 +19,7 @@ public interface ReceiverHandler {
 	 * @param fileNum
 	 * @return
 	 */
-	public boolean requestReceived(String user, int fileNum);
+	public boolean shouldAccept(String user, int fileNum);
 
 	public File getFileSaveLocation(String name);
 

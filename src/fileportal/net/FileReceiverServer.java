@@ -124,7 +124,7 @@ public class FileReceiverServer {
 							.println("FileReceiver: somebody gave this request: "
 									+ request);
 
-					boolean accept = m_handler.requestReceived(user, fileName);
+					boolean accept = m_handler.shouldAccept(user, fileName);
 					if (accept) {
 						writer.write("accept\n");
 						writer.flush();
@@ -143,7 +143,7 @@ public class FileReceiverServer {
 							.println("FileReceiver: somebody gave this request: "
 									+ request);
 
-					boolean accept = m_handler.requestReceived(user, fileNum);
+					boolean accept = m_handler.shouldAccept(user, fileNum);
 					if (accept) {
 						writer.write("accept\n");
 						writer.flush();

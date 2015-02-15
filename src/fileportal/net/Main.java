@@ -25,7 +25,7 @@ public class Main {
 		FileReceiverServer server = new FileReceiverServer(
 				new ReceiverHandler() {
 					@Override
-					public boolean requestReceived(String user, String name) {
+					public boolean shouldAccept(String user, String name) {
 						return true;
 					}
 
@@ -40,7 +40,7 @@ public class Main {
 					}
 
 					@Override
-					public boolean requestReceived(String user, int fileNum) {
+					public boolean shouldAccept(String user, int fileNum) {
 						return true;
 					}
 				});
