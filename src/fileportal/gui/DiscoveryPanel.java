@@ -22,15 +22,6 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 		
 		setForeground(Color.WHITE);
 		setBackground(Color.WHITE);
-		
-		userDiscovered(new User("James", PortalApp.DEFAULT_USER_ICON));
-		userDiscovered(new User("Komal", PortalApp.DEFAULT_USER_ICON));
-		userDiscovered(new User("Samuel", PortalApp.DEFAULT_USER_ICON));
-		userDiscovered(new User("Andrew", PortalApp.DEFAULT_USER_ICON));
-		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
-		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
-		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
-		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
 	}
 	
 	public Collection<User> getUsers() {
