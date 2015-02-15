@@ -1,5 +1,6 @@
 package fileportal.gui;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -29,7 +30,8 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		int halfWidth = (int) (getWidth() * 0.5f);
-		int halfHeight = (int) (getHeight() * 0.5f);
+		//int halfHeight = (int) (getHeight() * 0.5f);
+		int halfHeight = (int) (Math.min(PortalApp.TAB_HEIGHT, getHeight()) * 0.5f);
 		if (m_app.isPanelShowing()) {
 			g2d.drawLine(5, halfHeight + 10, halfWidth, halfHeight);
 			g2d.drawLine(5, halfHeight - 10, halfWidth, halfHeight);
@@ -37,6 +39,11 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 			g2d.drawLine(5, halfHeight, halfWidth, halfHeight + 10);
 			g2d.drawLine(5, halfHeight, halfWidth, halfHeight - 10);
 		}
+		AlphaComposite composite = 
+		  AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0);
+		g2d.setComposite(composite);
+		g2d.setColor(Color.WHITE);
+		g2d.drawRect(0, PortalApp.TAB_HEIGHT, PortalApp.TAB_WIDTH, getHeight() - PortalApp.TAB_HEIGHT);
 	}
 	public void mouseClicked(MouseEvent e) {
 		if (m_app.isPanelShowing()) m_app.hidePanel();

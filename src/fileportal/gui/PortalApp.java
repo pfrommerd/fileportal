@@ -44,7 +44,7 @@ public class PortalApp extends JFrame {
 	public static final int PANEL_WIDTH = 300;
 	public static final int PANEL_HEIGHT = 300;
 
-	public static final int Y_OFFSET = 30;
+	public static final int Y_OFFSET = 22;
 
 	public static final int MOVE_SPEED = 1;
 
