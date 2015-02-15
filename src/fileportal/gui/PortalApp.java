@@ -323,7 +323,10 @@ public class PortalApp extends JFrame {
 
 					@Override
 					public void setProgressTracker(TransferTracker tracker) {
-
+						/*
+						 * while (tracker.getPercentage() < 100) {
+						 * System.out.println(tracker.getPercentage()); }
+						 */
 					}
 				});
 		server.start();

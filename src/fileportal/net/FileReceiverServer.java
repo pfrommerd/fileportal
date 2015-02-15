@@ -136,16 +136,12 @@ public class FileReceiverServer {
 					TransferTracker tracker = new TransferTracker(0);
 					m_handler.setProgressTracker(tracker);
 
-					Thread t = new Thread(new Runnable() {
-						public void run() {
-							try {
-								readFiles(size, tracker);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					});
-					t.start();
+					/*
+					 * Thread t = new Thread(new Runnable() { public void run()
+					 * { try { readFiles(size, tracker); } catch (IOException e)
+					 * { e.printStackTrace(); } } }); t.start();
+					 */
+					readFiles(size, tracker);
 				} else {
 					writer.write("denied\n");
 					writer.flush();
