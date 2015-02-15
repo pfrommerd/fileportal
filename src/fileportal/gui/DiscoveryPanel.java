@@ -28,6 +28,9 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 		userDiscovered(new User("Samuel", PortalApp.DEFAULT_USER_ICON));
 		userDiscovered(new User("Andrew", PortalApp.DEFAULT_USER_ICON));
 		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
+		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
+		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
+		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
 	}
 	
 	public Collection<User> getUsers() {

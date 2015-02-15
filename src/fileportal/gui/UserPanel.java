@@ -4,7 +4,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -29,28 +28,10 @@ import fileportal.net.User;
 public class UserPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
-	private static BufferedImage s_softClipImg;
-	
-	public static void s_initClipImg(Graphics2D g) {
-		GraphicsConfiguration gc = g.getDeviceConfiguration();
-		BufferedImage img = gc.createCompatibleImage(PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, Transparency.TRANSLUCENT);
-		Graphics2D g2 = img.createGraphics();
-
-		// Clear the image so all pixels have zero alpha
-		g2.setComposite(AlphaComposite.Clear);
-		g2.fillRect(0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT);
-
-		// Render our clip shape into the image.  Note that we enable
-		// antialiasing to achieve the soft clipping effect.  Try
-		// commenting out the line that enables antialiasing, and
-		// you will see that you end up with the usual hard clipping.
-		g2.setComposite(AlphaComposite.Src);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setColor(Color.WHITE);
-		g2.fillOval(0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT);
-		
-		s_softClipImg = img;
-	}
+	//Clip image of the user, updated whenever the user image changes
+	private BufferedImage m_clippedImg = null;
+	//The last user image
+	private BufferedImage m_userImg = null;
 	
 	private boolean m_hovering = false;
 	private int m_hoverCircleWidth = PortalApp.USER_ICON_WIDTH;
@@ -65,6 +46,31 @@ public class UserPanel extends JPanel {
 	    setBackground(Color.WHITE);
 	    
 		m_user = u;
+	}
+	
+	public void updateClippedImage(Graphics2D g2d, BufferedImage icon) {
+		// Create a translucent intermediate image in which we can perform
+		// the soft clipping
+		GraphicsConfiguration gc = g2d.getDeviceConfiguration();
+		BufferedImage img = gc.createCompatibleImage(PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, Transparency.TRANSLUCENT);
+		Graphics2D g2 = img.createGraphics();
+
+		// Clear the image so all pixels have zero alpha
+		g2.setComposite(AlphaComposite.Clear);
+		g2.fillRect(0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT);
+
+		g2.setComposite(AlphaComposite.Src);
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setColor(Color.WHITE);
+		g2.fillOval(0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT);
+
+		g2.setComposite(AlphaComposite.SrcAtop);
+
+		//Draw the icon to the image
+		g2.drawImage(icon, 0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, null);
+		g2.dispose();
+		
+		m_clippedImg = img;
 	}
 	
 	@Override
@@ -107,31 +113,14 @@ public class UserPanel extends JPanel {
 				m_hoverCircleWidth > PortalApp.USER_ICON_HEIGHT) 
 			g2d.fillOval(-(m_hoverCircleWidth - PortalApp.USER_ICON_WIDTH >> 1), -((m_hoverCircleHeight - PortalApp.USER_ICON_HEIGHT) >> 1), m_hoverCircleWidth, m_hoverCircleHeight);
 		
-		// Create a translucent intermediate image in which we can perform
-		// the soft clipping
-		GraphicsConfiguration gc = g2d.getDeviceConfiguration();
-		BufferedImage img = gc.createCompatibleImage(PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, Transparency.TRANSLUCENT);
-		Graphics2D g2 = img.createGraphics();
 
-		// Clear the image so all pixels have zero alpha
-		g2.setComposite(AlphaComposite.Clear);
-		g2.fillRect(0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT);
-
-		g2.setComposite(AlphaComposite.Src);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setColor(Color.WHITE);
-		g2.fillOval(0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT);
-
-		g2.setComposite(AlphaComposite.SrcAtop);
-
-		//Draw the icon to the image
-		g2.drawImage(icon, 0, 0, PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, null);
-		
-		g2.dispose();
-
+		if (m_userImg != m_user.getIcon()) {
+			updateClippedImage(g2d, m_user.getIcon());
+			m_userImg = m_user.getIcon();
+		}
 		
 		// Copy our intermediate image to the screen
-		g2d.drawImage(img, 0, 0, null);
+		g2d.drawImage(m_clippedImg, 0, 0, null);
 		
 		//Do animating
 		
@@ -152,7 +141,8 @@ public class UserPanel extends JPanel {
 	public Dimension getMinimumSize() {
 		return new Dimension(Math.max(PortalApp.USER_ICON_WIDTH, PortalApp.USER_MAX_NAME_WIDTH),
 							PortalApp.USER_ICON_TOP_SPACE + PortalApp.USER_ICON_HEIGHT + 
-							PortalApp.USER_NAME_SPACING + PortalApp.USER_NAME_LINE_HEIGHT);
+							PortalApp.USER_NAME_SPACING + PortalApp.USER_NAME_LINE_HEIGHT + 
+							PortalApp.USER_NAME_LINE_DESCENT);
 	}
 	@Override
 	public Dimension getPreferredSize() {
@@ -164,6 +154,8 @@ public class UserPanel extends JPanel {
 	    public void drop(DropTargetDropEvent event) {
 	        // Accept copy drops
 	        event.acceptDrop(DnDConstants.ACTION_COPY);
+
+	        m_hovering = false;
 
 	        // Get the transfer which can provide the dropped item data
 	        Transferable transferable = event.getTransferable();
