@@ -19,7 +19,7 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		LANDiscoverer disc = new LANDiscoverer(user);
+		LANDiscoverer disc = new LANDiscoverer(new User("foobar"));
 		LANBroadcaster broad = new LANBroadcaster(user);
 		LANIconServer icon = new LANIconServer(user);
 		icon.start();
@@ -50,12 +50,14 @@ public class Main {
 		disc.addHandler(new DiscoverHandler() {
 			@Override
 			public void userDiscovered(User user) {
+				System.out.println("User discovered");
 				try {
-					File test = new File(this.getClass()
-							.getResource("tron.dmg").toURI());
+					File test = new File(this.getClass().getResource("lan")
+							.toURI());
 					File logo = new File(this.getClass()
 							.getResource("logo.png").toURI());
-					TransferTracker track = user.sendFiles(new File[] { test });
+					TransferTracker track = user.sendFiles(new File[] { test,
+							logo });
 					while (!track.isFinished()) {
 						System.out.println(track.getPercentage());
 					}
