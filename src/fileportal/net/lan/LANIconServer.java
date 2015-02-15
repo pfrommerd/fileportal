@@ -1,4 +1,4 @@
-package fileportal.net;
+package fileportal.net.lan;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -7,12 +7,14 @@ import java.net.Socket;
 
 import javax.imageio.ImageIO;
 
-public class IconServer {
+import fileportal.net.NetworkConstants;
+
+public class LANIconServer {
 	private ServerSocket m_sock;
 	private BufferedImage m_icon;
 	private Thread m_serveThread;
 
-	public IconServer(BufferedImage icon) {
+	public LANIconServer(BufferedImage icon) {
 		try {
 			m_sock = new ServerSocket(NetworkConstants.ICON_PORT);
 		} catch (IOException e) {
