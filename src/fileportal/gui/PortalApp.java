@@ -7,6 +7,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -15,7 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fileportal.net.Discoverer;
+import fileportal.net.FileReceiverServer;
+import fileportal.net.ReceiverHandler;
 import fileportal.net.User;
+import fileportal.net.lan.LANBroadcaster;
+import fileportal.net.lan.LANDiscoverer;
+import fileportal.net.lan.LANIconServer;
 
 public class PortalApp extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -43,14 +49,22 @@ public class PortalApp extends JFrame {
 	
 	public static final int USER_ICON_WIDTH = 50;
 	public static final int USER_ICON_HEIGHT = 50;
+	
+	public static final int USER_ICON_HOVER_RADIUS = 50;
+	public static final int USER_ICON_HOVER_SPEED = 3;
+	
 	public static final int USER_NAME_SPACING = 10;
 	public static final int USER_MAX_NAME_WIDTH = 70;
 	public static final int USER_NAME_LINE_HEIGHT = 20;
 	
+	public static final int USER_NAME_MAX_CHARS = 10;
+	
 	public static final int DIVIDER_THICKNESS = 1;
 	public static final Color DIVIDER_COLOR = Color.GRAY;
 
-	public static final Font FONT = new Font("Dialog", Font.BOLD, 16);
+	public static final Font PROFILE_FONT = new Font("Dialog", Font.BOLD, 16);
+	public static final Font USER_FONT = new Font("Dialog", Font.BOLD, 12);
+	
 	public static final Color FONT_COLOR = Color.GRAY;
 	
 	public static int SCREEN_WIDTH;
@@ -109,6 +123,7 @@ public class PortalApp extends JFrame {
 		
 		add(main);
 		setVisible(true);
+
 	}
 	
 	public boolean isPanelShowing() {
@@ -120,6 +135,17 @@ public class PortalApp extends JFrame {
 	}
 	public void removeDiscoverer(Discoverer d) {
 		d.removeHandler(m_discoveryPanel);
+	}
+	
+	public void run() {
+		while(true) {
+			repaint();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void hidePanel() {
@@ -141,9 +167,50 @@ public class PortalApp extends JFrame {
 	
 	public static void main(String[] args) {
 		User user = new User("Unknown");
+		user.setIcon(DEFAULT_USER_ICON);
+		/*NotificationManager manager = new SimpleManager(PopupLocation.SOUTHEAST);
+
+		AcceptNotification notification = new AcceptNotification("Testing notifications");
+		notification.setWindowTheme(ThemePackagePresets.cleanLight().windowTheme);
+		manager.addNotification(notification, Time.seconds(3));*/
 		
-		@SuppressWarnings("unused")
+		
+		LANDiscoverer disc = new LANDiscoverer(user);
+		LANBroadcaster broad = new LANBroadcaster(user);
+		
+		
+		LANIconServer icon = new LANIconServer(user);
+		icon.start();
+		
+		FileReceiverServer server = new FileReceiverServer(
+				new ReceiverHandler() {
+					@Override
+					public boolean shouldAccept(String user, String name) {
+						return true;
+					}
+
+					@Override
+					public File getFileSaveLocation(String name) {
+						return new File(System.getProperty("user.home") + "/Desktop/" + name);
+					}
+
+					@Override
+					public File getFolderSaveLocation() {
+						return new File(System.getProperty("user.home") + "/Desktop/");
+					}
+
+					@Override
+					public boolean shouldAccept(String user, int fileNum) {
+						return true;
+					}
+				});
+		server.start();
+		
+		disc.start();
+		broad.start();
+		
 		PortalApp app = new PortalApp(user);
-		//app.addDiscoverer(new LANDiscoverer());
+		app.addDiscoverer(disc);	
+		app.run();
 	}
 }

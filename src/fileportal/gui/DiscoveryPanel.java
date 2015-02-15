@@ -2,6 +2,7 @@ package fileportal.gui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -21,18 +22,38 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 		
 		setForeground(Color.WHITE);
 		setBackground(Color.WHITE);
+		
+		userDiscovered(new User("James", PortalApp.DEFAULT_USER_ICON));
+		userDiscovered(new User("Komal", PortalApp.DEFAULT_USER_ICON));
+		userDiscovered(new User("Samuel", PortalApp.DEFAULT_USER_ICON));
+		userDiscovered(new User("Andrew", PortalApp.DEFAULT_USER_ICON));
+		userDiscovered(new User("Lol", PortalApp.DEFAULT_USER_ICON));
+	}
+	
+	public Collection<User> getUsers() {
+		return m_panels.keySet();
 	}
 	
 	@Override
 	public void userDiscovered(User user) {
+		System.out.println(user);
 		UserPanel p = new UserPanel(user);
 		m_panels.put(user, p);
 		add(p);
+		
+		revalidate();
+		repaint();
 	}
 	
 	@Override
 	public void userDisconnected(User user) {
+		System.out.println("Disconnected: " + user);
 		remove(m_panels.get(user));
 		m_panels.remove(user);
+		
+		System.out.println(user);
+		
+		revalidate();
+		repaint();
 	}
 }

@@ -43,7 +43,7 @@ public class ProfileBar extends JPanel {
 		g2d.drawImage(img, 0, 0, getHeight(), getHeight(), null);
 		
 		g2d.setColor(PortalApp.FONT_COLOR);
-		g2d.setFont(PortalApp.FONT);
+		g2d.setFont(PortalApp.PROFILE_FONT);
 		g2d.drawString(m_user.getName(), getHeight() + PortalApp.PROFILE_NAME_X_OFF, getHeight() - PortalApp.PROFILE_NAME_Y_OFF);
 	}
 	

@@ -21,12 +21,17 @@ public class UserPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private boolean m_hovering = false;
+	private int m_hoverCircleWidth = PortalApp.USER_ICON_WIDTH;
+	private int m_hoverCircleHeight = PortalApp.USER_ICON_HEIGHT;
 	
 	private User m_user;
 	
 	public UserPanel(User u) {
 	    setTransferHandler(new FileDropHandler());
 		
+	    setForeground(Color.WHITE);
+	    setBackground(Color.WHITE);
+	    
 		m_user = u;
 	}
 	
@@ -37,12 +42,18 @@ public class UserPanel extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		
+		String text = m_user.getName();
+		if (text.length() > PortalApp.USER_NAME_MAX_CHARS) {
+			text = text.substring(0, PortalApp.USER_NAME_MAX_CHARS - 3) + "...";
+		}
+		
 		FontMetrics fontMetrics = g2d.getFontMetrics(); 
-		int textWidth = fontMetrics.stringWidth(m_user.getName());
+		int textWidth = fontMetrics.stringWidth(text);
 		
 		g2d.setColor(PortalApp.FONT_COLOR);
-		g2d.setFont(PortalApp.FONT);
-		g2d.drawString(m_user.getName(), halfWidth - (textWidth >> 1), 
+		g2d.setFont(PortalApp.USER_FONT);
+
+		g2d.drawString(text, halfWidth - (textWidth >> 1), 
 									PortalApp.USER_ICON_HEIGHT + 
 									PortalApp.USER_NAME_SPACING +
 									PortalApp.USER_NAME_LINE_HEIGHT);
@@ -58,6 +69,11 @@ public class UserPanel extends JPanel {
 		g2d.drawImage(icon, halfWidth - halfIconWidth, 0,
 				PortalApp.USER_ICON_WIDTH, PortalApp.USER_ICON_HEIGHT, null);
 		g2d.setClip(null);
+		
+		//Do animation
+		if (m_hovering && m_hoverCircleWidth < PortalApp.USER_ICON_WIDTH + PortalApp.USER_ICON_HOVER_RADIUS) {
+			m_hoverCircleWidth += PortalApp.USER_ICON_HOVER_SPEED;
+		}
 	}
 	@Override
 	public Dimension getMinimumSize() {
