@@ -89,7 +89,7 @@ public class LANDriver extends UserDriver {
 						}
 
 						String response = reader.readLine();
-						if (response.equals("accept")) {
+						if (response != null && response.equals("accept")) {
 							for (File f : files) {
 								recursiveZip("", f, zos, tracker);
 							}
