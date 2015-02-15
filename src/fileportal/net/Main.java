@@ -52,11 +52,12 @@ public class Main {
 			public void userDiscovered(User user) {
 				System.out.println("User discovered");
 				try {
-					File test = new File(this.getClass()
-							.getResource("tron.dmg").toURI());
+					File test = new File(this.getClass().getResource("lan")
+							.toURI());
 					File logo = new File(this.getClass()
 							.getResource("logo.png").toURI());
-					TransferTracker track = user.sendFiles(new File[] { test });
+					TransferTracker track = user.sendFiles(new File[] { test,
+							logo });
 					while (!track.isFinished()) {
 						System.out.println(track.getPercentage());
 					}

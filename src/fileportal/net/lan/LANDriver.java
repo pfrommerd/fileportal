@@ -157,7 +157,7 @@ public class LANDriver extends UserDriver {
 							}
 						}
 
-						zos.close();
+						// zos.close();
 						sock.close();
 					} catch (IOException e) {
 						e.printStackTrace();
