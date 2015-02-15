@@ -55,8 +55,12 @@ public class PortalApp extends JFrame {
 	public static BufferedImage PROFILE_SETTINGS_ICON = null;
 
 	public static final int PROFILE_BAR_HEIGHT = 32;
+
 	public static final int PROFILE_NAME_X_OFF = 5;
 	public static final int PROFILE_NAME_Y_OFF = 10;
+
+	// Should be the same as hover radius
+	public static final int PROFILE_NAME_LEADING_SPACE = 5;
 
 	// Should be the same as hover radius
 	public static final int USER_ICON_TOP_SPACE = 20;
@@ -65,11 +69,13 @@ public class PortalApp extends JFrame {
 	public static final int USER_ICON_HEIGHT = 50;
 
 	public static final int USER_ICON_HOVER_RADIUS = 20;
-	public static final int USER_ICON_HOVER_SPEED = 3;
 
-	public static final int USER_NAME_SPACING = 10;
+	public static final int USER_ICON_HOVER_SPEED = 6;
+
+	public static final int USER_NAME_SPACING = 5;
 	public static final int USER_MAX_NAME_WIDTH = 70;
-	public static final int USER_NAME_LINE_HEIGHT = 20;
+	public static final int USER_NAME_LINE_HEIGHT = 25;
+	public static final int USER_NAME_LINE_DESCENT = 5;
 
 	public static final int USER_NAME_MAX_CHARS = 10;
 
@@ -116,6 +122,8 @@ public class PortalApp extends JFrame {
 		setAlwaysOnTop(true);
 
 		JPanel main = new JPanel() {
+			private static final long serialVersionUID = 1L;
+
 			public void paintComponent(Graphics g) {
 				Graphics2D g2d = (Graphics2D) g;
 
