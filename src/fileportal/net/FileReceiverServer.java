@@ -60,7 +60,8 @@ public class FileReceiverServer {
 			m_sock = sock;
 		}
 
-		private void readFile(ZipInputStream zip, File file) throws IOException {
+		private long readFile(ZipInputStream zip, File file, long totalSize,
+				long read, TransferTracker tracker) throws IOException {
 			FileOutputStream fos = new FileOutputStream(file);
 
 			byte[] buffer = new byte[1024];
@@ -68,9 +69,16 @@ public class FileReceiverServer {
 			int len;
 			while ((len = zip.read(buffer)) > 0) {
 				fos.write(buffer, 0, len);
+				read += 1024;
+
+				tracker.setPercentage((double) 100 * read / totalSize);
+				System.out.println("Read: " + read);
+				System.out.println("Setting percentage: "
+						+ tracker.getPercentage());
 			}
 
 			fos.close();
+			return read;
 		}
 
 		private void readFiles(long totalSize, TransferTracker tracker)
@@ -86,15 +94,14 @@ public class FileReceiverServer {
 				File saveFile = new File(saveLoc, entry.getName());
 				System.out.println("FileReceiver: Unzipping: "
 						+ entry.getName());
+				System.out.println("Total bytes read: " + read);
 
 				File parent = new File(saveFile.getParent());
 
 				if (!parent.exists())
 					parent.mkdirs();
 
-				readFile(zip, saveFile);
-				read += saveFile.length();
-				tracker.setPercentage((double) 100 * read / totalSize);
+				read = readFile(zip, saveFile, totalSize, read, tracker);
 
 				zip.closeEntry();
 

@@ -311,13 +311,6 @@ public class PortalApp extends JFrame {
 					}
 
 					@Override
-					public void setProgressTracker(TransferTracker tracker) {
-						/*
-						 * while (tracker.getPercentage() < 100) {
-						 * System.out.println(tracker.getPercentage()); }
-						 */
-					}
-
 					public boolean shouldAccept(String userName, String fileName) {
 						User user = disc.getUserForName(userName);
 
@@ -329,6 +322,16 @@ public class PortalApp extends JFrame {
 						boolean accept = note.getAccept();
 						note.hide();
 						return accept;
+					}
+
+					@Override
+					public void setProgressTracker(TransferTracker tracker) {
+						/*
+						 * while (tracker.getPercentage() < 100) {
+						 * System.out.println(tracker.getPercentage()); try {
+						 * Thread.sleep(100); } catch (InterruptedException e) {
+						 * e.printStackTrace(); } }
+						 */
 					}
 
 				});
