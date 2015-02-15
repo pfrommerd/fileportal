@@ -67,7 +67,7 @@ public class AcceptNotification extends ComponentNotification {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				m_accepted = false;
-				synchronized(this) {
+				synchronized(AcceptNotification.this) {
 					AcceptNotification.this.notifyAll();
 				}
 			}

@@ -30,6 +30,7 @@ import fileportal.net.Discoverer;
 import fileportal.net.FileReceiverServer;
 import fileportal.net.ReceiverHandler;
 import fileportal.net.User;
+import fileportal.net.UserUtils;
 import fileportal.net.lan.LANBroadcaster;
 import fileportal.net.lan.LANDiscoverer;
 import fileportal.net.lan.LANIconServer;
@@ -44,7 +45,7 @@ public class PortalApp extends JFrame {
 
 	public static final int Y_OFFSET = 30;
 
-	public static final int MOVE_SPEED = 20;
+	public static final int MOVE_SPEED = 1;
 
 	public static final int SCROLL_SPEED = 6;
 
@@ -62,6 +63,8 @@ public class PortalApp extends JFrame {
 	// Should be the same as hover radius
 	public static final int PROFILE_NAME_LEADING_SPACE = 5;
 
+	public static final int LOADING_ARC_RADIUS = 56;
+	
 	public static final float USER_FADE_RATE = 0.10f;
 	
 	// Should be the same as hover radius
@@ -88,6 +91,7 @@ public class PortalApp extends JFrame {
 	public static final Font USER_FONT = new Font("Dialog", Font.BOLD, 12);
 
 	public static final Color FONT_COLOR = Color.GRAY;
+	public static final Color TRANSFER_COLOR = Color.BLUE;
 
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
@@ -186,18 +190,15 @@ public class PortalApp extends JFrame {
 			}
 		}
 	}
-
 	public void hidePanel() {
 		while (isPanelShowing()) {
 			int panelX = getX() + TAB_WIDTH;
 			int desX = SCREEN_WIDTH;
 			int delta = desX - panelX;
-			int moveX = delta / 5;
-			System.out.println(delta);
+			int moveX = (int) (delta * MOVE_SPEED / 5f);
 			if (delta < 5) {
 				moveX = 1;
 			}
-
 			// Move to the right
 			setLocation(getX() + moveX, getY());
 			repaint();
@@ -207,21 +208,55 @@ public class PortalApp extends JFrame {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Done hiding");
 	}
 
 	public void showPanel() {
 		while (getX() > SCREEN_WIDTH - PANEL_WIDTH - TAB_WIDTH) {
+			int panelX = getX() + TAB_WIDTH;
+			int desX = SCREEN_WIDTH - PANEL_WIDTH;
+			int delta = desX - panelX;
+			int moveX = (int) (delta * MOVE_SPEED / 5f);
+			if (delta > -5) {
+				moveX = -1;
+			}
+
 			// Move to the left
-			setLocation(getX() - MOVE_SPEED, getY());
+			setLocation(getX() + moveX, getY());
 			repaint();
 		}
 		repaint();
 	}
 
 	public static void main(String[] args) {
-		User user = new User(System.getProperty("user.name"));
-		user.setIcon(DEFAULT_USER_ICON);
+		
+		
+		User user = null;
+		
+		try {
+			user = UserUtils.s_readUser(new File(System.getProperty("user.home") + "/.fileportal"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (user == null) {
+			user = new User(System.getProperty("user.name"));
+			user.setIcon(DEFAULT_USER_ICON);
+		}
+		final User u = user;
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+		    public void run() {
+		    	if (u != null) {
+		    		try {
+						UserUtils.s_saveUser(u, new File(System.getProperty("user.home") + "/.fileportal"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+		    	}
+		    }
+		});
+		
+		//Now start the main app
 
 		final NotificationFactory noteFactory = new NotificationFactory(
 				ThemePackagePresets.cleanLight());

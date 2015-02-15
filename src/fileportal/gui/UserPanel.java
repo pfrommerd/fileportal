@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import fileportal.net.TransferTracker;
 import fileportal.net.User;
 
 public class UserPanel extends JPanel {
@@ -37,6 +38,7 @@ public class UserPanel extends JPanel {
 	private int m_hoverCircleWidth = PortalApp.USER_ICON_WIDTH;
 	private int m_hoverCircleHeight = PortalApp.USER_ICON_HEIGHT;
 	
+	private TransferTracker m_currentTransfer = null;
 	private float m_alpha = 0f;
 	
 	private User m_user;
@@ -107,7 +109,6 @@ public class UserPanel extends JPanel {
 									PortalApp.USER_NAME_SPACING +
 									PortalApp.USER_NAME_LINE_HEIGHT);
 		
-		//Draw the image of the user
 		BufferedImage icon = m_user.getIcon();
 		if (icon == null) icon = PortalApp.DEFAULT_USER_ICON;
 		int halfIconWidth = PortalApp.USER_ICON_WIDTH >> 1;
@@ -120,6 +121,21 @@ public class UserPanel extends JPanel {
 				m_hoverCircleWidth > PortalApp.USER_ICON_HEIGHT) 
 			g2d.fillOval(-(m_hoverCircleWidth - PortalApp.USER_ICON_WIDTH >> 1), -((m_hoverCircleHeight - PortalApp.USER_ICON_HEIGHT) >> 1), m_hoverCircleWidth, m_hoverCircleHeight);
 
+		//Draw the sending percent animation if there is a file transfer
+		if (m_currentTransfer != null) {
+			g2d.setColor(PortalApp.TRANSFER_COLOR);
+			int deg = (int) (m_currentTransfer.getPercentage() / 100 * 360);
+			System.out.println(deg);
+			g2d.fillArc(-((PortalApp.LOADING_ARC_RADIUS - PortalApp.USER_ICON_WIDTH) >> 1),
+						-((PortalApp.LOADING_ARC_RADIUS - PortalApp.USER_ICON_HEIGHT) >> 1), 
+						PortalApp.LOADING_ARC_RADIUS, PortalApp.LOADING_ARC_RADIUS, 
+						0, 
+						deg);
+			if (m_currentTransfer.getPercentage() >= 100) {
+				m_currentTransfer = null;
+			}
+		}
+		
 		if (m_userImg != m_user.getIcon()) {
 			updateClippedImage(g2d, m_user.getIcon());
 			m_userImg = m_user.getIcon();
@@ -189,7 +205,7 @@ public class UserPanel extends JPanel {
 	                    // Get all of the dropped files
 	                    @SuppressWarnings("unchecked")
 						List<File> files = (List<File>) transferable.getTransferData(flavor);
-	                    m_user.sendFiles(files.toArray(new File[0]));
+	                    m_currentTransfer = m_user.sendFiles(files.toArray(new File[0]));
 	                }
 	            } catch (Exception e) {
 	                e.printStackTrace();

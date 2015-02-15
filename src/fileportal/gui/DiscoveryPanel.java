@@ -46,9 +46,7 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 			remove(panel);
 		}
 		m_panels.remove(user);
-		
-		System.out.println(user);
-		
+				
 		revalidate();
 		repaint();
 	}
