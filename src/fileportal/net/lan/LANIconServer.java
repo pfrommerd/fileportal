@@ -42,7 +42,6 @@ public class LANIconServer {
 					ImageIO.write(m_user.getIcon(), "png",
 							sock.getOutputStream());
 					sock.close();
-					System.out.println("IconServer: sent icon!");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

@@ -73,7 +73,7 @@ public class FileReceiverServer {
 			fos.close();
 		}
 
-		private void readMultipleFiles() throws IOException {
+		private void readFiles() throws IOException {
 			File saveLoc = m_handler.getFolderSaveLocation();
 
 			ZipInputStream zip = new ZipInputStream(m_sock.getInputStream());
@@ -125,7 +125,7 @@ public class FileReceiverServer {
 					writer.write("accept\n");
 					writer.flush();
 
-					readMultipleFiles();
+					readFiles();
 				} else {
 					writer.write("denied\n");
 					writer.flush();
