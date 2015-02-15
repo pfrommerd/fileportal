@@ -62,6 +62,8 @@ public class PortalApp extends JFrame {
 	// Should be the same as hover radius
 	public static final int PROFILE_NAME_LEADING_SPACE = 5;
 
+	public static final float USER_FADE_RATE = 0.10f;
+	
 	// Should be the same as hover radius
 	public static final int USER_ICON_TOP_SPACE = 20;
 
@@ -212,7 +214,7 @@ public class PortalApp extends JFrame {
 				PopupLocation.NORTHWEST);
 		noteFactory.addBuilder("accept", new AcceptNotificationBuilder());
 
-		LANDiscoverer disc = new LANDiscoverer(user);
+		final LANDiscoverer disc = new LANDiscoverer(user);
 		LANBroadcaster broad = new LANBroadcaster(user);
 
 		LANIconServer icon = new LANIconServer(user);
@@ -221,21 +223,27 @@ public class PortalApp extends JFrame {
 		FileReceiverServer server = new FileReceiverServer(
 				new ReceiverHandler() {
 					@Override
-					public boolean shouldAccept(String user, String name) {
+					public boolean shouldAccept(String userName, String name) {
+						User user = disc.getUserForName(userName);
+
 						AcceptNotification note = (AcceptNotification) noteFactory
-								.build("accept", user + " wants to share "
-										+ name + " with you.");
+								.build("accept", user.getIcon(),"Accept file from " + userName, name + " from " + userName);
 						noteManager.addNotification(note, Time.infinite());
-						return note.getAccept();
+						boolean accept = note.getAccept();
+						note.hide();
+						return accept;
 					}
 
 					@Override
-					public boolean shouldAccept(String user, int fileNum) {
+					public boolean shouldAccept(String userName, int fileNum) {
+						User user = disc.getUserForName(userName);
+						
 						AcceptNotification note = (AcceptNotification) noteFactory
-								.build("accept", user + " wants to share "
-										+ fileNum + " files with you.");
+								.build("accept", user.getIcon(), "Accept files form " + userName, fileNum + " files from " + userName);
 						noteManager.addNotification(note, Time.infinite());
-						return note.getAccept();
+						boolean accept = note.getAccept();
+						note.hide();
+						return accept;
 					}
 
 					@Override

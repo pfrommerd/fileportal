@@ -58,7 +58,7 @@ public class LANDriver extends UserDriver {
 	}
 
 	@Override
-	public TransferTracker sendFiles(final File[] files, User from) {
+	public TransferTracker sendFiles(final File[] files, final User from) {
 		if (getUser() == null) {
 			throw new RuntimeException("No user set on driver!");
 		}
