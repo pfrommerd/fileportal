@@ -93,6 +93,8 @@ public class PortalApp extends JFrame {
 	public static final Color FONT_COLOR = Color.GRAY;
 	public static final Color TRANSFER_COLOR = Color.BLUE;
 
+	public static final Color EXIT_BUTTON_COLOR = Color.RED;
+	
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
 
@@ -150,7 +152,7 @@ public class PortalApp extends JFrame {
 
 		subPanel.setLayout(new BorderLayout());
 
-		m_discoveryPanel = new DiscoveryPanel();
+		m_discoveryPanel = new DiscoveryPanel(this);
 
 		JScrollPane scroll = new JScrollPane();
 		scroll.getVerticalScrollBar().setUnitIncrement(SCROLL_SPEED);
@@ -167,6 +169,8 @@ public class PortalApp extends JFrame {
 		add(main);
 		setVisible(true);
 	}
+	
+	public User getUser() { return m_user; }
 
 	public boolean isPanelShowing() {
 		return getX() + TAB_WIDTH < SCREEN_WIDTH;
@@ -228,8 +232,6 @@ public class PortalApp extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		
-		
 		User user = null;
 		
 		try {

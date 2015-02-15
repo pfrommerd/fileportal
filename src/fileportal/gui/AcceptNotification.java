@@ -2,6 +2,7 @@ package fileportal.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -38,8 +39,12 @@ public class AcceptNotification extends ComponentNotification {
 	public static final int ICON_PADDING = 10;
 
 	public AcceptNotification(BufferedImage icon, String msg, String subMsg) {
+		Image img = icon;
+		if (icon.getWidth() != 64 || icon.getHeight() != 64) {
+			img = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+		}
 		m_iconLabel = new JLabel();
-		m_iconLabel.setIcon(new ImageIcon(icon));
+		m_iconLabel.setIcon(new ImageIcon(img));
 		m_titleLabel = new JLabel(msg);
 		m_subtitleLabel = new JLabel(subMsg);
 

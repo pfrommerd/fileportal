@@ -1,8 +1,11 @@
 package fileportal.gui;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -85,6 +88,7 @@ public class ProfileBar extends JPanel {
 		
 		add(m_icon, BorderLayout.WEST);
 		add(m_name, BorderLayout.CENTER);
+		add(new ExitPanel(), BorderLayout.EAST);
 
 		u.addListener(new UserListener() {
 			@Override
@@ -148,4 +152,62 @@ public class ProfileBar extends JPanel {
 		@Override
 		public void mouseExited(MouseEvent e) {}
 	}
+	public class ExitPanel extends JPanel implements MouseListener {
+		private static final long serialVersionUID = 1L;
+		
+		public ExitPanel() {
+			setForeground(Color.WHITE);
+			setBackground(Color.WHITE);
+			
+			addMouseListener(this);
+		}
+		
+		@Override
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			/*g.drawLine(0, getHeight() / 2, getWidth(), 0);
+			g.drawLine(0, 0, getWidth(), getHeight() / 2);
+			
+			//And the border
+			g.drawLine(0, 0, 0, getHeight() / 2);
+			g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);*/
+
+			g.setColor(PortalApp.EXIT_BUTTON_COLOR);
+			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+			g2d.setComposite(ac);
+			g2d.fillRect(0, 0, getWidth(), getHeight() / 2);
+		}
+		@Override
+		public Dimension getMinimumSize() {
+			return new Dimension(PortalApp.PROFILE_BAR_HEIGHT / 2,
+								 PortalApp.PROFILE_BAR_HEIGHT);
+		}
+		@Override
+		public Dimension getPreferredSize() {
+			return getMinimumSize();
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.exit(0);
+		}
+		@Override
+		public void mousePressed(MouseEvent e) {
+
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			
+		}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+		}
+		@Override
+		public void mouseExited(MouseEvent e) {
+			
+		}
+	}
+
 }

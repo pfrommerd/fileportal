@@ -29,6 +29,8 @@ import fileportal.net.User;
 public class UserPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
+	private PortalApp m_app;
+
 	// Clip image of the user, updated whenever the user image changes
 	private BufferedImage m_clippedImg = null;
 	// The last user image
@@ -44,6 +46,15 @@ public class UserPanel extends JPanel {
 	private User m_user;
 
 	public UserPanel(User u) {
+		new DropTarget(this, new MyDragDropListener());
+
+		setForeground(Color.WHITE);
+		setBackground(Color.WHITE);
+	}
+
+	public UserPanel(PortalApp app, User u) {
+		m_app = app;
+
 		new DropTarget(this, new MyDragDropListener());
 
 		setForeground(Color.WHITE);
@@ -132,12 +143,12 @@ public class UserPanel extends JPanel {
 		if (m_currentTransfer != null) {
 			g2d.setColor(PortalApp.TRANSFER_COLOR);
 			int deg = (int) (m_currentTransfer.getPercentage() / 100 * 360);
-			System.out.println(deg);
+
 			g2d.fillArc(
 					-((PortalApp.LOADING_ARC_RADIUS - PortalApp.USER_ICON_WIDTH) >> 1),
 					-((PortalApp.LOADING_ARC_RADIUS - PortalApp.USER_ICON_HEIGHT) >> 1),
 					PortalApp.LOADING_ARC_RADIUS, PortalApp.LOADING_ARC_RADIUS,
-					0, deg);
+					90, -deg);
 			if (m_currentTransfer.getPercentage() >= 100) {
 				m_currentTransfer = null;
 			}
@@ -221,7 +232,7 @@ public class UserPanel extends JPanel {
 						List<File> files = (List<File>) transferable
 								.getTransferData(flavor);
 						m_currentTransfer = m_user.sendFiles(
-								files.toArray(new File[0]), null);
+								files.toArray(new File[0]), m_app.getUser());
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
