@@ -40,7 +40,11 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 	
 	@Override
 	public void userDisconnected(User user) {
-		remove(m_panels.get(user));
+		UserPanel panel = m_panels.get(user);
+		if (panel != null) {
+			panel.fadeOut();
+			remove(panel);
+		}
 		m_panels.remove(user);
 		
 		System.out.println(user);

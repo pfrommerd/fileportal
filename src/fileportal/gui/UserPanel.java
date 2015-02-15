@@ -37,6 +37,8 @@ public class UserPanel extends JPanel {
 	private int m_hoverCircleWidth = PortalApp.USER_ICON_WIDTH;
 	private int m_hoverCircleHeight = PortalApp.USER_ICON_HEIGHT;
 	
+	private float m_alpha = 0f;
+	
 	private User m_user;
 	
 	public UserPanel(User u) {
@@ -78,7 +80,12 @@ public class UserPanel extends JPanel {
 		super.paintComponent(g);
 		
 		Graphics2D g2d = (Graphics2D) g;
-
+		
+		if (m_alpha < 1) {
+			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.max(m_alpha, 0));
+			g2d.setComposite(ac);
+		}
+		
 		int halfWidth = (int) (getWidth() * 0.5f);
 
 		g2d.setColor(Color.BLACK);
@@ -112,7 +119,6 @@ public class UserPanel extends JPanel {
 		if (m_hoverCircleWidth > PortalApp.USER_ICON_WIDTH ||
 				m_hoverCircleWidth > PortalApp.USER_ICON_HEIGHT) 
 			g2d.fillOval(-(m_hoverCircleWidth - PortalApp.USER_ICON_WIDTH >> 1), -((m_hoverCircleHeight - PortalApp.USER_ICON_HEIGHT) >> 1), m_hoverCircleWidth, m_hoverCircleHeight);
-		
 
 		if (m_userImg != m_user.getIcon()) {
 			updateClippedImage(g2d, m_user.getIcon());
@@ -123,7 +129,9 @@ public class UserPanel extends JPanel {
 		g2d.drawImage(m_clippedImg, 0, 0, null);
 		
 		//Do animating
-		
+		if (m_alpha < 1) {
+			m_alpha += PortalApp.USER_FADE_RATE;
+		}
 		if (m_hovering && m_hoverCircleWidth < PortalApp.USER_ICON_WIDTH + PortalApp.USER_ICON_HOVER_RADIUS) {
 			m_hoverCircleWidth += PortalApp.USER_ICON_HOVER_SPEED;
 		}
@@ -137,6 +145,18 @@ public class UserPanel extends JPanel {
 			m_hoverCircleHeight -= PortalApp.USER_ICON_HOVER_SPEED;
 		}
 	}
+
+	public void fadeOut() {
+		while(m_alpha > 0) {
+			m_alpha -= PortalApp.USER_FADE_RATE;
+			try {
+				Thread.sleep(16);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(Math.max(PortalApp.USER_ICON_WIDTH, PortalApp.USER_MAX_NAME_WIDTH),
