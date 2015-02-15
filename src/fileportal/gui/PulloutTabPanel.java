@@ -17,8 +17,8 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 	
 	public PulloutTabPanel(PortalApp app) {
 		m_app = app;
-		setForeground(Color.WHITE);
-		setBackground(Color.WHITE);
+		setForeground(PortalApp.BACKGROUND_COLOR);
+		setBackground(PortalApp.BACKGROUND_COLOR);
 		setBorder(BorderFactory.createMatteBorder(0, 0, 0, PortalApp.DIVIDER_THICKNESS, PortalApp.DIVIDER_COLOR));
 
 		addMouseListener(this);

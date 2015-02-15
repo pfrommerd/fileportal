@@ -22,8 +22,8 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 		setBorder(BorderFactory.createEmptyBorder(PortalApp.GRID_SPACING, PortalApp.GRID_SPACING, PortalApp.GRID_SPACING, PortalApp.GRID_SPACING));
 		setLayout(new GridLayout(0, 3, PortalApp.GRID_SPACING, PortalApp.GRID_SPACING));
 		
-		setForeground(Color.WHITE);
-		setBackground(Color.WHITE);
+		setForeground(PortalApp.BACKGROUND_COLOR);
+		setBackground(PortalApp.BACKGROUND_COLOR);
 	}
 	
 	public Collection<User> getUsers() {
