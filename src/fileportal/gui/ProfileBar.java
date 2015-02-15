@@ -98,15 +98,20 @@ public class ProfileBar extends JPanel {
 
 			@Override
 			public void iconChanged(BufferedImage icon) {
+				System.out.println("Changing icon");
 				//Downscale the icon
 				Image img = icon.getScaledInstance(PortalApp.PROFILE_BAR_HEIGHT, 
 								PortalApp.PROFILE_BAR_HEIGHT, Image.SCALE_SMOOTH);
+				
+				remove(m_icon);
 				
 				m_icon = new JLabel(new ImageIcon(img));
 				m_icon.addMouseListener(new IconMouseListener());
 				
 				add(m_icon, BorderLayout.WEST);
+				
 				revalidate();
+				repaint();
 			}
 		});
 	}

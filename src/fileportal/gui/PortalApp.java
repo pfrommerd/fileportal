@@ -41,7 +41,7 @@ public class PortalApp extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public static final int TAB_WIDTH = 15;
-	public static final int TAB_HEIGHT = 100;
+	public static final int TAB_HEIGHT = 300;
 	public static final int PANEL_WIDTH = 300;
 	public static final int PANEL_HEIGHT = 300;
 
