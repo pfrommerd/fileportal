@@ -73,17 +73,6 @@ public class FileReceiverServer {
 			fos.close();
 		}
 
-		private void readSingleFile(String name) throws IOException {
-			File saveFile = m_handler.getFileSaveLocation(name);
-
-			ZipInputStream zip = new ZipInputStream(m_sock.getInputStream());
-			zip.getNextEntry();
-
-			readFile(zip, saveFile);
-
-			zip.close();
-		}
-
 		private void readMultipleFiles() throws IOException {
 			File saveLoc = m_handler.getFolderSaveLocation();
 
@@ -98,7 +87,7 @@ public class FileReceiverServer {
 				File parent = new File(saveFile.getParent());
 
 				if (!parent.exists())
-					parent.mkdir();
+					parent.mkdirs();
 
 				readFile(zip, saveFile);
 
