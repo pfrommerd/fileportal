@@ -14,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 
 import fileportal.net.NetworkConstants;
 import fileportal.net.TransferTracker;
+import fileportal.net.User;
 import fileportal.net.UserDriver;
 
 public class LANDriver extends UserDriver {
@@ -23,17 +24,17 @@ public class LANDriver extends UserDriver {
 		m_address = address;
 	}
 
-	private void recursiveZip(File file, ZipOutputStream zos,
+	private void recursiveZip(String root, File file, ZipOutputStream zos,
 			TransferTracker tracker) throws FileNotFoundException {
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
 
 			for (File f : files) {
-				recursiveZip(f, zos, tracker);
+				recursiveZip(root + file.getName() + "/", f, zos, tracker);
 			}
 		} else {
 			FileInputStream fis = new FileInputStream(file);
-			ZipEntry entry = new ZipEntry(file.getName());
+			ZipEntry entry = new ZipEntry(root + file.getName());
 			try {
 				zos.putNextEntry(entry);
 
@@ -57,7 +58,7 @@ public class LANDriver extends UserDriver {
 	}
 
 	@Override
-	public TransferTracker sendFiles(final File[] files) {
+	public TransferTracker sendFiles(final File[] files, User from) {
 		if (getUser() == null) {
 			throw new RuntimeException("No user set on driver!");
 		}
@@ -78,11 +79,11 @@ public class LANDriver extends UserDriver {
 						ZipOutputStream zos = new ZipOutputStream(
 								sock.getOutputStream());
 						if (files.length == 1) {
-							writer.write("Single: " + getUser().getName()
+							writer.write("Single: " + from.getName()
 									+ "---div---" + files[0].getName() + "\n");
 							writer.flush();
 						} else {
-							writer.write("Multiple: " + getUser().getName()
+							writer.write("Multiple: " + from.getName()
 									+ "---div---" + files.length + "\n");
 							writer.flush();
 						}
@@ -90,7 +91,7 @@ public class LANDriver extends UserDriver {
 						String response = reader.readLine();
 						if (response.equals("accept")) {
 							for (File f : files) {
-								recursiveZip(f, zos, tracker);
+								recursiveZip("", f, zos, tracker);
 							}
 						}
 

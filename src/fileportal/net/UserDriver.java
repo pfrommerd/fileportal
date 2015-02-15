@@ -15,7 +15,9 @@ public abstract class UserDriver {
 
 	/**
 	 * @param files
+	 * @param fromUser
+	 *            the User that is sending the file
 	 * @return a status tracker
 	 */
-	public abstract TransferTracker sendFiles(File[] files);
+	public abstract TransferTracker sendFiles(File[] files, User fromUser);
 }

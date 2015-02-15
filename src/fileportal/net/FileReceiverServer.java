@@ -93,6 +93,11 @@ public class FileReceiverServer {
 			while (entry != null) {
 				File saveFile = new File(saveLoc, entry.getName());
 
+				File parent = new File(saveFile.getParent());
+
+				if (!parent.exists())
+					parent.mkdir();
+
 				readFile(zip, saveFile);
 
 				zip.closeEntry();
