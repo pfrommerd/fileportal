@@ -225,8 +225,8 @@ public class PortalApp extends JFrame {
 						AcceptNotification note = (AcceptNotification) noteFactory
 								.build("accept", user + " wants to share "
 										+ name + " with you.");
-						noteManager.addNotification(note, Time.seconds(5));
-						return true;
+						noteManager.addNotification(note, Time.infinite());
+						return note.getAccept();
 					}
 
 					@Override
@@ -234,8 +234,8 @@ public class PortalApp extends JFrame {
 						AcceptNotification note = (AcceptNotification) noteFactory
 								.build("accept", user + " wants to share "
 										+ fileNum + " files with you.");
-						noteManager.addNotification(note, Time.seconds(5));
-						return true;
+						noteManager.addNotification(note, Time.infinite());
+						return note.getAccept();
 					}
 
 					@Override
