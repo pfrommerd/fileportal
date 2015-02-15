@@ -186,7 +186,7 @@ public class PortalApp extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		User user = new User("Unknown");
+		User user = new User(System.getProperty("user.name"));
 		user.setIcon(DEFAULT_USER_ICON);
 		/*NotificationManager manager = new SimpleManager(PopupLocation.SOUTHEAST);
 
