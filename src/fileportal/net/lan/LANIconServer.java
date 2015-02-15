@@ -1,6 +1,5 @@
 package fileportal.net.lan;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,19 +7,20 @@ import java.net.Socket;
 import javax.imageio.ImageIO;
 
 import fileportal.net.NetworkConstants;
+import fileportal.net.User;
 
 public class LANIconServer {
 	private ServerSocket m_sock;
-	private BufferedImage m_icon;
+	private User m_user;
 	private Thread m_serveThread;
 
-	public LANIconServer(BufferedImage icon) {
+	public LANIconServer(User user) {
 		try {
 			m_sock = new ServerSocket(NetworkConstants.ICON_PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		m_icon = icon;
+		m_user = user;
 	}
 
 	public void start() {
@@ -39,7 +39,8 @@ public class LANIconServer {
 			while (true) {
 				try {
 					Socket sock = m_sock.accept();
-					ImageIO.write(m_icon, "png", sock.getOutputStream());
+					ImageIO.write(m_user.getIcon(), "png",
+							sock.getOutputStream());
 					sock.close();
 					System.out.println("IconServer: sent icon!");
 				} catch (IOException e) {

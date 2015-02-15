@@ -13,15 +13,17 @@ import fileportal.net.lan.LANIconServer;
 public class Main {
 	public static void main(String[] args) {
 		User user = new User("test2");
-		LANDiscoverer disc = new LANDiscoverer(new User("Foobar"));
-		LANBroadcaster broad = new LANBroadcaster(user);
 		try {
-			LANIconServer icon = new LANIconServer(ImageIO.read(Main.class
-					.getResource("logo.png")));
-			icon.start();
+			user.setIcon(ImageIO.read(Main.class.getResource("logo.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		LANDiscoverer disc = new LANDiscoverer(new User("Foobar"));
+		LANBroadcaster broad = new LANBroadcaster(user);
+		LANIconServer icon = new LANIconServer(user);
+		icon.start();
+
 		FileReceiverServer server = new FileReceiverServer(
 				new ReceiverHandler() {
 					@Override
