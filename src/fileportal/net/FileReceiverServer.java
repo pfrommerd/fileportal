@@ -156,7 +156,9 @@ public class FileReceiverServer {
 
 				m_sock.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("Failed read file...");
+				
+				//e.printStackTrace();
 			}
 		}
 	}
