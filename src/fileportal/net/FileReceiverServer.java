@@ -60,25 +60,27 @@ public class FileReceiverServer {
 			m_sock = sock;
 		}
 
+		private void readFile(ZipInputStream zip, File file) throws IOException {
+			FileOutputStream fos = new FileOutputStream(file);
+
+			byte[] buffer = new byte[1024];
+
+			int len;
+			while ((len = zip.read(buffer)) > 0) {
+				fos.write(buffer, 0, len);
+			}
+
+			fos.close();
+		}
+
 		private void readSingleFile(String name) throws IOException {
-			File saveLoc = m_handler.getFileSaveLocation(name);
+			File saveFile = m_handler.getFileSaveLocation(name);
 
 			ZipInputStream zip = new ZipInputStream(m_sock.getInputStream());
+			zip.getNextEntry();
 
-			ZipEntry entry = zip.getNextEntry();
+			readFile(zip, saveFile);
 
-			while (entry != null) {
-				FileOutputStream fos = new FileOutputStream(saveLoc);
-
-				byte[] buffer = new byte[1024];
-
-				int len;
-				while ((len = zip.read(buffer)) > 0) {
-					fos.write(buffer, 0, len);
-				}
-
-				fos.close();
-			}
 			zip.close();
 		}
 
@@ -89,18 +91,10 @@ public class FileReceiverServer {
 			ZipEntry entry = zip.getNextEntry();
 
 			while (entry != null) {
-				System.out.println("got entry: " + entry);
 				File saveFile = new File(saveLoc, entry.getName());
-				FileOutputStream fos = new FileOutputStream(saveFile);
 
-				byte[] buffer = new byte[1024];
+				readFile(zip, saveFile);
 
-				int len;
-				while ((len = zip.read(buffer)) > 0) {
-					fos.write(buffer, 0, len);
-				}
-
-				fos.close();
 				zip.closeEntry();
 
 				entry = zip.getNextEntry();
@@ -120,9 +114,6 @@ public class FileReceiverServer {
 					String[] parts = request.substring(8).split("---div---");
 					String user = parts[0];
 					String fileName = parts[1];
-					System.out
-							.println("FileReceiver: somebody gave this request: "
-									+ request);
 
 					boolean accept = m_handler.shouldAccept(user, fileName);
 					if (accept) {
@@ -133,28 +124,21 @@ public class FileReceiverServer {
 					} else {
 						writer.write("denied\n");
 						writer.flush();
-						System.out.println("FileReceiver: Denying file");
 					}
 				} else if (request.indexOf("Multiple: ") == 0) {
 					String[] parts = request.substring(10).split("---div---");
 					String user = parts[0];
 					String fileNum = parts[1];
-					System.out
-							.println("FileReceiver: somebody gave this request: "
-									+ request);
 
 					boolean accept = m_handler.shouldAccept(user, fileNum);
 					if (accept) {
 						writer.write("accept\n");
 						writer.flush();
 
-						System.out.println("Reading multiple files");
-
 						readMultipleFiles();
 					} else {
 						writer.write("denied\n");
 						writer.flush();
-						System.out.println("FileReceiver: Denying file");
 					}
 				}
 
