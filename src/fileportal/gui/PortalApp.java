@@ -16,7 +16,6 @@ import javax.swing.JScrollPane;
 
 import fileportal.net.Discoverer;
 import fileportal.net.User;
-import fileportal.net.lan.LANUser;
 
 public class PortalApp extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -141,7 +140,7 @@ public class PortalApp extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		LANUser user = new LANUser("HI");
+		User user = new User("Unknown");
 		
 		@SuppressWarnings("unused")
 		PortalApp app = new PortalApp(user);
