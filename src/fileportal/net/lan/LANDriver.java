@@ -24,9 +24,24 @@ public class LANDriver extends UserDriver {
 		m_address = address;
 	}
 
+	public static long sizeOf(File file) {
+		if (!file.isDirectory())
+			return file.length();
+
+		long length = 0;
+		for (File f : file.listFiles()) {
+			length += sizeOf(f);
+		}
+		return length;
+	}
+
+	private long m_totalSize = 0;
+	private long m_totalRead = 0;
+
 	private void recursiveZip(String root, File file, ZipOutputStream zos,
 			TransferTracker tracker) throws FileNotFoundException {
 		System.out.println("LANDriver: zipping file: " + file.getName());
+
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
 
@@ -39,15 +54,14 @@ public class LANDriver extends UserDriver {
 			try {
 				zos.putNextEntry(entry);
 
-				long length = file.length();
-				long read = 0;
 				byte[] buffer = new byte[1024];
 				int len;
 				while ((len = fis.read(buffer)) > 0) {
 					zos.write(buffer, 0, len);
-					read += 1024;
+					m_totalRead += 1024;
 
-					tracker.setPercentage((double) 100 * read / length);
+					tracker.setPercentage((double) 100 * m_totalRead
+							/ m_totalSize);
 				}
 
 				fis.close();
@@ -92,9 +106,17 @@ public class LANDriver extends UserDriver {
 
 						String response = reader.readLine();
 						if (response != null && response.equals("accept")) {
+							m_totalRead = 0;
+
+							for (File f : files) {
+								m_totalSize += sizeOf(f);
+							}
 							for (File f : files) {
 								recursiveZip("", f, zos, tracker);
 							}
+
+							m_totalRead = 0;
+							m_totalSize = 0;
 						}
 
 						sock.close();
