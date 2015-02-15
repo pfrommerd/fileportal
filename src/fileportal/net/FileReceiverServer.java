@@ -117,36 +117,29 @@ public class FileReceiverServer {
 				PrintWriter writer = new PrintWriter(m_sock.getOutputStream());
 
 				String request = reader.readLine();
+				boolean accept = false;
 				if (request.indexOf("Single: ") == 0) {
 					String[] parts = request.substring(8).split("---div---");
 					String user = parts[0];
 					String fileName = parts[1];
 
-					boolean accept = m_handler.shouldAccept(user, fileName);
-					if (accept) {
-						writer.write("accept\n");
-						writer.flush();
-
-						readSingleFile(fileName);
-					} else {
-						writer.write("denied\n");
-						writer.flush();
-					}
+					accept = m_handler.shouldAccept(user, fileName);
 				} else if (request.indexOf("Multiple: ") == 0) {
 					String[] parts = request.substring(10).split("---div---");
 					String user = parts[0];
 					String fileNum = parts[1];
 
-					boolean accept = m_handler.shouldAccept(user, fileNum);
-					if (accept) {
-						writer.write("accept\n");
-						writer.flush();
+					accept = m_handler.shouldAccept(user, fileNum);
+				}
 
-						readMultipleFiles();
-					} else {
-						writer.write("denied\n");
-						writer.flush();
-					}
+				if (accept) {
+					writer.write("accept\n");
+					writer.flush();
+
+					readMultipleFiles();
+				} else {
+					writer.write("denied\n");
+					writer.flush();
 				}
 
 				m_sock.close();
