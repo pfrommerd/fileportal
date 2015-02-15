@@ -27,6 +27,7 @@ import com.theme.ThemePackagePresets;
 
 import fileportal.gui.FileNotification.FileNotificationBuilder;
 import fileportal.net.Discoverer;
+import fileportal.net.FileReceive;
 import fileportal.net.FileReceiverServer;
 import fileportal.net.ReceiverHandler;
 import fileportal.net.TransferTracker;
@@ -284,56 +285,75 @@ public class PortalApp extends JFrame {
 
 		FileReceiverServer server = new FileReceiverServer(
 				new ReceiverHandler() {
+					/*
+					 * @Override public boolean shouldAccept(String userName,
+					 * int fileNum) { User user = disc.getUserForName(userName);
+					 * 
+					 * FileNotification note = (FileNotification) noteFactory
+					 * .build("accept", user.getIcon(), "Accept files form " +
+					 * userName, fileNum + " files from " + userName);
+					 * noteManager.addNotification(note, Time.infinite());
+					 * boolean accept = note.getAccept(); note.hide(); return
+					 * accept; }
+					 * 
+					 * @Override public File getFileSaveLocation(String name) {
+					 * return new File(System.getProperty("user.home") +
+					 * "/Desktop/" + name); }
+					 * 
+					 * @Override public File getFolderSaveLocation() { return
+					 * new File(System.getProperty("user.home") + "/Desktop/");
+					 * }
+					 * 
+					 * @Override public boolean shouldAccept(String userName,
+					 * String fileName) { User user =
+					 * disc.getUserForName(userName);
+					 * 
+					 * FileNotification note = (FileNotification) noteFactory
+					 * .build("accept", user.getIcon(), "Accept files form " +
+					 * userName, fileName + " from " + userName);
+					 * noteManager.addNotification(note, Time.infinite());
+					 * boolean accept = note.getAccept(); note.hide(); return
+					 * accept; }
+					 * 
+					 * @Override public void setProgressTracker(TransferTracker
+					 * tracker) {
+					 * 
+					 * }
+					 */
+
 					@Override
-					public boolean shouldAccept(String userName, int fileNum) {
-						User user = disc.getUserForName(userName);
+					public void fileReceived(FileReceive receive) {
+						User user = disc.getUserForName(receive.getFromUser());
 
 						FileNotification note = (FileNotification) noteFactory
-								.build("accept", user.getIcon(),
-										"Accept files form " + userName,
-										fileNum + " files from " + userName);
+								.build("accept",
+										user.getIcon(),
+										"Accept files from "
+												+ receive.getFromUser(),
+										receive.getFileName() + " from "
+												+ receive.getFromUser());
 						noteManager.addNotification(note, Time.infinite());
+
 						boolean accept = note.getAccept();
+						note.showTransfer();
+
+						TransferTracker tracker = new TransferTracker(0);
+						receive.addProgressTracker(tracker);
+
+						if (accept) {
+							receive.accept(new File(System
+									.getProperty("user.home") + "/Desktop/"));
+						} else {
+							receive.decline();
+						}
+
+						while (tracker.getPercentage() < 100) {
+							note.setTransferPercentage((float) tracker
+									.getPercentage());
+						}
+
 						note.hide();
-						return accept;
 					}
-
-					@Override
-					public File getFileSaveLocation(String name) {
-						return new File(System.getProperty("user.home")
-								+ "/Desktop/" + name);
-					}
-
-					@Override
-					public File getFolderSaveLocation() {
-						return new File(System.getProperty("user.home")
-								+ "/Desktop/");
-					}
-
-					@Override
-					public boolean shouldAccept(String userName, String fileName) {
-						User user = disc.getUserForName(userName);
-
-						FileNotification note = (FileNotification) noteFactory
-								.build("accept", user.getIcon(),
-										"Accept files form " + userName,
-										fileName + " from " + userName);
-						noteManager.addNotification(note, Time.infinite());
-						boolean accept = note.getAccept();
-						note.hide();
-						return accept;
-					}
-
-					@Override
-					public void setProgressTracker(TransferTracker tracker) {
-						/*
-						 * while (tracker.getPercentage() < 100) {
-						 * System.out.println(tracker.getPercentage()); try {
-						 * Thread.sleep(100); } catch (InterruptedException e) {
-						 * e.printStackTrace(); } }
-						 */
-					}
-
 				});
 		server.start();
 

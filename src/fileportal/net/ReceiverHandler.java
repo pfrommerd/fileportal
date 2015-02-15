@@ -1,8 +1,9 @@
 package fileportal.net;
 
-import java.io.File;
 
 public interface ReceiverHandler {
+	public void fileReceived(FileReceive receive);
+
 	/**
 	 * Called when someone wants to drop a file.
 	 * 
@@ -10,7 +11,7 @@ public interface ReceiverHandler {
 	 * @param name
 	 * @return whether the file should be received
 	 */
-	public boolean shouldAccept(String user, String name);
+	// public boolean shouldAccept(String user, String name);
 
 	/**
 	 * Called when someone wants to drop a number of files.
@@ -19,11 +20,13 @@ public interface ReceiverHandler {
 	 * @param fileNum
 	 * @return
 	 */
-	public boolean shouldAccept(String user, int fileNum);
+	// public boolean shouldAccept(String user, int fileNum);
 
-	public File getFileSaveLocation(String name);
-
-	public File getFolderSaveLocation();
-
-	public void setProgressTracker(TransferTracker tracker);
+	/*
+	 * public File getFileSaveLocation(String name);
+	 * 
+	 * public File getFolderSaveLocation();
+	 * 
+	 * public void setProgressTracker(TransferTracker tracker);
+	 */
 }
