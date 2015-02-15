@@ -3,9 +3,12 @@ package fileportal.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,10 +50,13 @@ public class PortalApp extends JFrame {
 	public static final int PROFILE_NAME_X_OFF = 5;
 	public static final int PROFILE_NAME_Y_OFF = 10;
 	
+	//Should be the same as hover radius
+	public static final int USER_ICON_TOP_SPACE = 20;
+	
 	public static final int USER_ICON_WIDTH = 50;
 	public static final int USER_ICON_HEIGHT = 50;
 	
-	public static final int USER_ICON_HOVER_RADIUS = 50;
+	public static final int USER_ICON_HOVER_RADIUS = 20;
 	public static final int USER_ICON_HOVER_SPEED = 3;
 	
 	public static final int USER_NAME_SPACING = 10;
@@ -101,7 +107,22 @@ public class PortalApp extends JFrame {
 		setAlwaysOnTop(true);
 		
 
-		JPanel main = new JPanel();
+		JPanel main = new JPanel() {
+			public void paintComponent(Graphics g) {
+				Graphics2D g2d = (Graphics2D) g;
+
+				g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON);
+			    g2d.setRenderingHint(
+			            RenderingHints.KEY_FRACTIONALMETRICS,
+			            RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+			    g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			    
+				super.paintComponent(g);
+			}
+		};
 		main.setLayout(new BorderLayout());
 		JPanel subPanel = new JPanel();
 		
@@ -123,7 +144,6 @@ public class PortalApp extends JFrame {
 		
 		add(main);
 		setVisible(true);
-
 	}
 	
 	public boolean isPanelShowing() {
@@ -210,7 +230,9 @@ public class PortalApp extends JFrame {
 		broad.start();
 		
 		PortalApp app = new PortalApp(user);
-		app.addDiscoverer(disc);	
+		app.addDiscoverer(disc);
+		
+		//will run the main loop
 		app.run();
 	}
 }

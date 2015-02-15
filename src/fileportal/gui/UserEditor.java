@@ -4,6 +4,7 @@ package fileportal.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +46,8 @@ public class UserEditor extends JFrame {
 					if (file != null) {
 						try {
 							m_selected = ImageIO.read(file);
+							m_selected = (BufferedImage) m_selected.getScaledInstance(PortalApp.USER_ICON_WIDTH, 
+									PortalApp.USER_ICON_HEIGHT, Image.SCALE_SMOOTH);
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}

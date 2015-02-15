@@ -36,7 +36,6 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 	
 	@Override
 	public void userDiscovered(User user) {
-		System.out.println(user);
 		UserPanel p = new UserPanel(user);
 		m_panels.put(user, p);
 		add(p);
@@ -47,7 +46,6 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 	
 	@Override
 	public void userDisconnected(User user) {
-		System.out.println("Disconnected: " + user);
 		remove(m_panels.get(user));
 		m_panels.remove(user);
 		
