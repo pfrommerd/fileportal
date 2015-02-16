@@ -2,12 +2,12 @@ package fileportal.gui;
 
 import java.io.File;
 
+import com.manager.NotificationManager;
+import com.manager.QueueManager;
 import com.notification.NotificationFactory;
-import com.notification.NotificationFactory.PopupLocation;
-import com.notification.NotificationManager;
-import com.notification.QueueManager;
-import com.notification.Time;
+import com.notification.NotificationFactory.Location;
 import com.theme.ThemePackagePresets;
+import com.utils.Time;
 
 import fileportal.gui.FileNotification.FileNotificationBuilder;
 import fileportal.net.Discoverer;
@@ -23,7 +23,7 @@ public class GuiReceiverHandler implements ReceiverHandler {
 
 	public GuiReceiverHandler() {
 		m_factory = new NotificationFactory(ThemePackagePresets.cleanLight());
-		m_manager = new QueueManager(PopupLocation.NORTHWEST);
+		m_manager = new QueueManager(Location.NORTHWEST);
 		m_factory.addBuilder("accept", new FileNotificationBuilder());
 	}
 
