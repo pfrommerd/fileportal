@@ -48,6 +48,11 @@ public class LanDiscoverer implements Discoverer {
 	}
 
 	@Override
+	public List<User> getConnectedUsers() {
+		return m_connected;
+	}
+
+	@Override
 	public void addHandler(DiscoverHandler handler) {
 		System.out.println("LANDiscoverer: Handler added");
 		m_handlers.add(handler);
