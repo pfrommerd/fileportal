@@ -1,11 +1,11 @@
 package fileportal.gui;
 
 import java.awt.BorderLayout;
+import java.awt.DisplayMode;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +28,12 @@ public class PortalApp extends JFrame {
 
 	static {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
-		Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
-
-		PortalConstants.SCREEN_WIDTH = (int) rect.getWidth();
-		PortalConstants.SCREEN_HEIGHT = (int) rect.getHeight();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		for (GraphicsDevice curGs : gs) {
+			DisplayMode mode = curGs.getDisplayMode();
+			PortalConstants.SCREEN_WIDTH += mode.getWidth();
+			PortalConstants.SCREEN_HEIGHT += mode.getHeight();
+		}
 
 		try {
 			PortalConstants.DEFAULT_USER_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/unknown-user.png"));
@@ -99,7 +100,7 @@ public class PortalApp extends JFrame {
 	}
 
 	public boolean isPanelShowing() {
-		return getX() + PortalConstants.TAB_WIDTH < PortalConstants.SCREEN_WIDTH;
+		return this.getWidth() > 100;
 	}
 
 	public void addDiscoverer(Discoverer d) {
@@ -122,40 +123,13 @@ public class PortalApp extends JFrame {
 	}
 
 	public void hidePanel() {
-		while (isPanelShowing()) {
-			int panelX = getX() + PortalConstants.TAB_WIDTH;
-			int desX = PortalConstants.SCREEN_WIDTH;
-			int delta = desX - panelX;
-			int moveX = (int) (delta * PortalConstants.MOVE_SPEED / 5f);
-			if (delta < 5) {
-				moveX = 1;
-			}
-			// Move to the right
-			setLocation(getX() + moveX, getY());
-			repaint();
-			try {
-				Thread.sleep(20);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		this.setSize(60, 30);
+		this.setLocation(PortalConstants.SCREEN_WIDTH - 60, 0);
 	}
 
 	public void showPanel() {
-		while (getX() > PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH - PortalConstants.TAB_WIDTH) {
-			int panelX = getX() + PortalConstants.TAB_WIDTH;
-			int desX = PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH;
-			int delta = desX - panelX;
-			int moveX = (int) (delta * PortalConstants.MOVE_SPEED / 5f);
-			if (delta > -5) {
-				moveX = -1;
-			}
-
-			// Move to the left
-			setLocation(getX() + moveX, getY());
-			repaint();
-		}
-		repaint();
+		this.setSize(PortalConstants.PANEL_WIDTH, PortalConstants.PANEL_HEIGHT);
+		this.setLocation(PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH, 0);
 	}
 
 	public static void main(String[] args) {
