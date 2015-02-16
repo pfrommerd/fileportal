@@ -1,12 +1,26 @@
 package fileportal.net;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TransferTracker {
 	private int m_currentFile;
 	private int m_numFiles;
 	private double m_percentage;
 
-	public TransferTracker(double percentage) {
-		m_percentage = percentage;
+	private List<TransferListener> m_listeners;
+
+	public TransferTracker() {
+		m_percentage = 0;
+		m_listeners = new ArrayList<TransferListener>();
+	}
+
+	public void addListener(TransferListener listener) {
+		m_listeners.add(listener);
+	}
+
+	public void removeListener(TransferListener listener) {
+		m_listeners.remove(listener);
 	}
 
 	public int getCurrentFile() {
@@ -35,5 +49,13 @@ public class TransferTracker {
 
 	public void setPercentage(double percentage) {
 		m_percentage = percentage;
+
+		for (TransferListener listener : m_listeners) {
+			listener.percentageChanged(percentage);
+		}
+	}
+
+	public static interface TransferListener {
+		public void percentageChanged(double newPercentage);
 	}
 }
