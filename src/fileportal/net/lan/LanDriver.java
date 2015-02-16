@@ -17,10 +17,10 @@ import fileportal.net.TransferTracker;
 import fileportal.net.User;
 import fileportal.net.UserDriver;
 
-public class LANDriver extends UserDriver {
+public class LanDriver extends UserDriver {
 	private InetAddress m_address;
 
-	public LANDriver(InetAddress address) {
+	public LanDriver(InetAddress address) {
 		m_address = address;
 	}
 

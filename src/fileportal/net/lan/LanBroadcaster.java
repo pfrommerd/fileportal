@@ -15,12 +15,12 @@ import fileportal.net.Broadcaster;
 import fileportal.net.NetworkConstants;
 import fileportal.net.User;
 
-public class LANBroadcaster implements Broadcaster {
+public class LanBroadcaster implements Broadcaster {
 	private User m_user;
 	private DatagramSocket m_sock;
 	private Timer m_timer;
 
-	public LANBroadcaster(User user) {
+	public LanBroadcaster(User user) {
 		m_user = user;
 	}
 

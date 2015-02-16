@@ -15,24 +15,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.notification.NotificationFactory;
-import com.notification.NotificationFactory.PopupLocation;
-import com.notification.NotificationManager;
-import com.notification.QueueManager;
-import com.notification.Time;
-import com.theme.ThemePackagePresets;
-
-import fileportal.gui.FileNotification.FileNotificationBuilder;
 import fileportal.net.Discoverer;
-import fileportal.net.FileReceive;
 import fileportal.net.FileReceiverServer;
-import fileportal.net.ReceiverHandler;
-import fileportal.net.TransferTracker;
 import fileportal.net.User;
 import fileportal.net.UserUtils;
-import fileportal.net.lan.LANBroadcaster;
-import fileportal.net.lan.LANDiscoverer;
-import fileportal.net.lan.LANIconServer;
+import fileportal.net.lan.LanBroadcaster;
+import fileportal.net.lan.LanDiscoverer;
+import fileportal.net.lan.LanIconServer;
 
 public class PortalApp extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -81,9 +70,10 @@ public class PortalApp extends JFrame {
 				super.paintComponent(g);
 			}
 		};
-		main.setLayout(new BorderLayout());
-		JPanel subPanel = new JPanel();
 
+		main.setLayout(new BorderLayout());
+
+		JPanel subPanel = new JPanel();
 		subPanel.setLayout(new BorderLayout());
 
 		m_discoveryPanel = new DiscoveryPanel(this);
@@ -124,7 +114,7 @@ public class PortalApp extends JFrame {
 		while (true) {
 			repaint();
 			try {
-				Thread.sleep(50);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -181,6 +171,7 @@ public class PortalApp extends JFrame {
 			user = new User(System.getProperty("user.name"));
 			user.setIcon(PortalConstants.DEFAULT_USER_ICON);
 		}
+
 		final User u = user;
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -197,66 +188,13 @@ public class PortalApp extends JFrame {
 		});
 
 		// Now start the main app
-		final NotificationFactory noteFactory = new NotificationFactory(ThemePackagePresets.cleanLight());
-		final NotificationManager noteManager = new QueueManager(PopupLocation.NORTHWEST);
-		noteFactory.addBuilder("accept", new FileNotificationBuilder());
+		LanDiscoverer disc = new LanDiscoverer(user);
+		LanBroadcaster broad = new LanBroadcaster(user);
 
-		final LANDiscoverer disc = new LANDiscoverer(user);
-		LANBroadcaster broad = new LANBroadcaster(user);
-
-		LANIconServer icon = new LANIconServer(user);
+		LanIconServer icon = new LanIconServer(user);
 		icon.start();
 
-		FileReceiverServer server = new FileReceiverServer(new ReceiverHandler() {
-
-			@Override
-			public void fileReceived(FileReceive receive) {
-				User user = disc.getUserForName(receive.getFromUser());
-
-				String message = null;
-				if (receive.isIsSingleFile()) {
-					message = receive.getFileName() + " from " + receive.getFromUser();
-				} else {
-					message = receive.getNumFiles() + " files from " + receive.getFromUser();
-				}
-
-				final FileNotification note = (FileNotification) noteFactory.build("accept", user.getIcon(), "Accept files from "
-						+ receive.getFromUser(), message);
-				noteManager.addNotification(note, Time.infinite());
-
-				boolean accept = note.getAccept();
-				note.showTransfer();
-
-				TransferTracker tracker = new TransferTracker(0) {
-					private int lastPercent = 0;
-
-					@Override
-					public void setPercentage(double percentage) {
-						super.setPercentage(percentage);
-
-						int percent = (int) percentage;
-						if (percent - lastPercent < 1)
-							return;
-
-						if (percent >= 99)
-							note.hide();
-						else
-							note.setTransferPercentage(percent);
-
-						lastPercent = percent;
-
-					}
-				};
-				receive.addProgressTracker(tracker);
-
-				if (accept) {
-					receive.accept(new File(System.getProperty("user.home") + "/Desktop/"));
-				} else {
-					receive.decline();
-					note.hide();
-				}
-			}
-		});
+		FileReceiverServer server = new FileReceiverServer(new GuiReceiverHandler());
 		server.start();
 
 		disc.start();

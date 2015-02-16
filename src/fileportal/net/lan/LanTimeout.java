@@ -6,12 +6,12 @@ import java.util.TimerTask;
 import fileportal.net.NetworkConstants;
 import fileportal.net.User;
 
-public class LANTimeout {
+public class LanTimeout {
 	private User m_user;
-	private LANDiscoverer m_disc;
+	private LanDiscoverer m_disc;
 	private Timer m_timer;
 
-	public LANTimeout(User user, LANDiscoverer discoverer) {
+	public LanTimeout(User user, LanDiscoverer discoverer) {
 		m_user = user;
 		m_disc = discoverer;
 		m_timer = new Timer();

@@ -9,12 +9,12 @@ import javax.imageio.ImageIO;
 import fileportal.net.NetworkConstants;
 import fileportal.net.User;
 
-public class LANIconServer {
+public class LanIconServer {
 	private ServerSocket m_sock;
 	private User m_user;
 	private Thread m_serveThread;
 
-	public LANIconServer(User user) {
+	public LanIconServer(User user) {
 		try {
 			m_sock = new ServerSocket(NetworkConstants.ICON_PORT);
 		} catch (IOException e) {
