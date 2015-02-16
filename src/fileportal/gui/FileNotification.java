@@ -90,7 +90,7 @@ public class FileNotification extends ComponentNotification {
 		addComponent(panel, BorderLayout.CENTER);
 		addComponent(m_buttonPanel, BorderLayout.SOUTH);
 
-		setSize(300, 125);
+		setSize(300, 150);
 	}
 
 	/**

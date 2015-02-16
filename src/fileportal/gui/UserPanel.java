@@ -39,8 +39,12 @@ public class UserPanel extends JPanel {
 
 	// Clip image of the user, updated whenever the user image changes
 	private BufferedImage m_clippedImg = null;
-	// The last user image
-	private BufferedImage m_userImg = null;
+	// The last user image that has been clipped
+	private Image m_lastUserImg = null;
+
+	private String m_userName;
+	private Image m_userImg = null;
+
 
 	private boolean m_hovering = false;
 	private int m_hoverCircleWidth = PortalConstants.USER_ICON_WIDTH;
@@ -53,9 +57,6 @@ public class UserPanel extends JPanel {
 	
 	private User m_user;
 
-	private String m_userName;
-	private Image m_userImage;
-	
 	public UserPanel(PortalApp app, User u) {
 		m_app = app;
 
@@ -69,7 +70,7 @@ public class UserPanel extends JPanel {
 		m_userName = m_user.getName();
 		
 		// Downscale the icon
-		m_userImage = m_user.getIcon().getScaledInstance(PortalConstants.PROFILE_BAR_HEIGHT, PortalConstants.PROFILE_BAR_HEIGHT,
+		m_userImg = m_user.getIcon().getScaledInstance(PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT,
 														Image.SCALE_SMOOTH);
 		
 		m_user.addListener(new UserListener() {
@@ -81,7 +82,7 @@ public class UserPanel extends JPanel {
 			@Override
 			public void iconChanged(BufferedImage icon) {
 				// Downscale the icon
-				m_userImage = icon.getScaledInstance(PortalConstants.PROFILE_BAR_HEIGHT, PortalConstants.PROFILE_BAR_HEIGHT,
+				m_userImg = icon.getScaledInstance(PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT,
 													 Image.SCALE_SMOOTH);
 			}
 		});
@@ -102,7 +103,7 @@ public class UserPanel extends JPanel {
 		});
 	}
 
-	public void updateClippedImage(Graphics2D g2d, BufferedImage icon) {
+	public void updateClippedImage(Graphics2D g2d, Image m_userImg2) {
 		// Create a translucent intermediate image in which we can perform
 		// the soft clipping
 		GraphicsConfiguration gc = g2d.getDeviceConfiguration();
@@ -122,7 +123,7 @@ public class UserPanel extends JPanel {
 		g2.setComposite(AlphaComposite.SrcAtop);
 		
 		// Draw the icon to the image
-		g2.drawImage(icon, 0, 0, PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT, null);
+		g2.drawImage(m_userImg2, 0, 0, PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT, null);
 		g2.dispose();
 
 		m_clippedImg = img;
@@ -159,7 +160,7 @@ public class UserPanel extends JPanel {
 		g2d.drawString(text, halfWidth - (textWidth >> 1), PortalConstants.USER_ICON_TOP_SPACE + PortalConstants.USER_ICON_HEIGHT
 						+ PortalConstants.USER_NAME_SPACING + PortalConstants.USER_NAME_LINE_HEIGHT);
 
-		BufferedImage icon = m_userImg;
+		BufferedImage icon = m_clippedImg;
 		if (icon == null)
 			icon = PortalConstants.DEFAULT_USER_ICON;
 		int halfIconWidth = PortalConstants.USER_ICON_WIDTH >> 1;
@@ -186,9 +187,9 @@ public class UserPanel extends JPanel {
 			}
 		}
 
-		if (m_userImg != m_user.getIcon()) {
-			updateClippedImage(g2d, m_user.getIcon());
-			m_userImg = m_user.getIcon();
+		if (m_lastUserImg != m_userImg) {
+			updateClippedImage(g2d, m_userImg);
+			m_lastUserImg = m_userImg;
 		}
 
 		// Copy our intermediate image to the screen
@@ -260,6 +261,12 @@ public class UserPanel extends JPanel {
 
 		@Override
 		public void drop(DropTargetDropEvent event) {
+			Dimension dim = UserPanel.this.getPreferredSize();
+			Point loc = event.getLocation();
+			if (loc.getY() > dim.getHeight() || loc.getX() > dim.getWidth()) {
+				return;
+			}
+			
 			// Accept copy drops
 			event.acceptDrop(DnDConstants.ACTION_COPY);
 			

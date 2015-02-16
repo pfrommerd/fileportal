@@ -46,7 +46,7 @@ public class GuiReceiverHandler implements ReceiverHandler {
 		m_manager.addNotification(note, Time.infinite());
 
 		boolean accept = note.getAccept();
-		note.showTransfer();
+		if (accept) note.showTransfer();
 
 		TransferTracker tracker = new TransferTracker();
 		tracker.addListener(new TransferListener() {
