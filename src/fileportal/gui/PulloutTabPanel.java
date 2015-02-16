@@ -17,9 +17,9 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 
 	public PulloutTabPanel(PortalApp app) {
 		m_app = app;
-		setForeground(PortalApp.BACKGROUND_COLOR);
-		setBackground(PortalApp.BACKGROUND_COLOR);
-		setBorder(BorderFactory.createMatteBorder(0, 0, 0, PortalApp.DIVIDER_THICKNESS, PortalApp.DIVIDER_COLOR));
+		setForeground(PortalConstants.BACKGROUND_COLOR);
+		setBackground(PortalConstants.BACKGROUND_COLOR);
+		setBorder(BorderFactory.createMatteBorder(0, 0, 0, PortalConstants.DIVIDER_THICKNESS, PortalConstants.DIVIDER_COLOR));
 
 		addMouseListener(this);
 	}
@@ -31,7 +31,7 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 		g2d.setColor(Color.BLACK);
 		int halfWidth = (int) (getWidth() * 0.5f);
 		// int halfHeight = (int) (getHeight() * 0.5f);
-		int halfHeight = (int) (Math.min(PortalApp.TAB_HEIGHT, getHeight()) * 0.5f);
+		int halfHeight = (int) (Math.min(PortalConstants.TAB_HEIGHT, getHeight()) * 0.5f);
 		if (m_app.isPanelShowing()) {
 			g2d.drawLine(5, halfHeight + 10, halfWidth, halfHeight);
 			g2d.drawLine(5, halfHeight - 10, halfWidth, halfHeight);
@@ -71,7 +71,7 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(PortalApp.TAB_WIDTH, PortalApp.TAB_HEIGHT);
+		return new Dimension(PortalConstants.TAB_WIDTH, PortalConstants.TAB_HEIGHT);
 	}
 
 }

@@ -49,10 +49,8 @@ public class LANBroadcaster implements Broadcaster {
 			byte[] sendData = ("User: " + m_user.getName()).getBytes();
 
 			try {
-				DatagramPacket sendPacket = new DatagramPacket(sendData,
-						sendData.length,
-						InetAddress.getByName("255.255.255.255"),
-						NetworkConstants.BROADCAST_LISTEN_PORT);
+				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
+						InetAddress.getByName("255.255.255.255"), NetworkConstants.BROADCAST_LISTEN_PORT);
 
 				m_sock.send(sendPacket);
 			} catch (UnknownHostException e1) {

@@ -38,20 +38,21 @@ public class ProfileBar extends JPanel {
 
 		setLayout(new BorderLayout());
 
-		setBorder(BorderFactory.createMatteBorder(0, 0, PortalApp.DIVIDER_THICKNESS, 0, PortalApp.DIVIDER_COLOR));
-		setForeground(PortalApp.BACKGROUND_COLOR);
-		setBackground(PortalApp.BACKGROUND_COLOR);
+		setBorder(BorderFactory.createMatteBorder(0, 0, PortalConstants.DIVIDER_THICKNESS, 0, PortalConstants.DIVIDER_COLOR));
+		setForeground(PortalConstants.BACKGROUND_COLOR);
+		setBackground(PortalConstants.BACKGROUND_COLOR);
 
 		// Downscale the icon
-		Image img = u.getIcon().getScaledInstance(PortalApp.PROFILE_BAR_HEIGHT, PortalApp.PROFILE_BAR_HEIGHT, Image.SCALE_SMOOTH);
+		Image img = u.getIcon().getScaledInstance(PortalConstants.PROFILE_BAR_HEIGHT, PortalConstants.PROFILE_BAR_HEIGHT,
+				Image.SCALE_SMOOTH);
 
 		m_icon = new JLabel(new ImageIcon(img));
 		m_icon.addMouseListener(new IconMouseListener());
 
 		m_name = new JLabel(" " + u.getName());
 
-		m_name.setForeground(PortalApp.FONT_COLOR);
-		m_name.setFont(PortalApp.PROFILE_FONT);
+		m_name.setForeground(PortalConstants.FONT_COLOR);
+		m_name.setFont(PortalConstants.PROFILE_FONT);
 
 		add(m_name, BorderLayout.CENTER);
 
@@ -106,8 +107,8 @@ public class ProfileBar extends JPanel {
 			public void iconChanged(BufferedImage icon) {
 				System.out.println("Changing icon");
 				// Downscale the icon
-				Image img = icon
-						.getScaledInstance(PortalApp.PROFILE_BAR_HEIGHT, PortalApp.PROFILE_BAR_HEIGHT, Image.SCALE_SMOOTH);
+				Image img = icon.getScaledInstance(PortalConstants.PROFILE_BAR_HEIGHT, PortalConstants.PROFILE_BAR_HEIGHT,
+						Image.SCALE_SMOOTH);
 
 				remove(m_icon);
 
@@ -124,7 +125,7 @@ public class ProfileBar extends JPanel {
 
 	@Override
 	public Dimension getMinimumSize() {
-		return new Dimension(PortalApp.PROFILE_BAR_HEIGHT, PortalApp.PROFILE_BAR_HEIGHT);
+		return new Dimension(PortalConstants.PROFILE_BAR_HEIGHT, PortalConstants.PROFILE_BAR_HEIGHT);
 	}
 
 	@Override
@@ -175,8 +176,8 @@ public class ProfileBar extends JPanel {
 		private static final long serialVersionUID = 1L;
 
 		public ExitPanel() {
-			setForeground(PortalApp.BACKGROUND_COLOR);
-			setBackground(PortalApp.BACKGROUND_COLOR);
+			setForeground(PortalConstants.BACKGROUND_COLOR);
+			setBackground(PortalConstants.BACKGROUND_COLOR);
 
 			addMouseListener(this);
 		}
@@ -192,7 +193,7 @@ public class ProfileBar extends JPanel {
 			g.drawLine(0, 0, 0, getHeight() / 2);
 			g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);*/
 
-			g.setColor(PortalApp.EXIT_BUTTON_COLOR);
+			g.setColor(PortalConstants.EXIT_BUTTON_COLOR);
 			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
 			g2d.setComposite(ac);
 			g2d.fillRect(0, 0, getWidth(), getHeight() / 2);
@@ -200,7 +201,7 @@ public class ProfileBar extends JPanel {
 
 		@Override
 		public Dimension getMinimumSize() {
-			return new Dimension(PortalApp.PROFILE_BAR_HEIGHT / 2, PortalApp.PROFILE_BAR_HEIGHT);
+			return new Dimension(PortalConstants.PROFILE_BAR_HEIGHT / 2, PortalConstants.PROFILE_BAR_HEIGHT);
 		}
 
 		@Override

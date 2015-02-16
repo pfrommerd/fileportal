@@ -39,8 +39,7 @@ public class LANIconServer {
 			while (true) {
 				try {
 					Socket sock = m_sock.accept();
-					ImageIO.write(m_user.getIcon(), "png",
-							sock.getOutputStream());
+					ImageIO.write(m_user.getIcon(), "png", sock.getOutputStream());
 					sock.close();
 				} catch (IOException e) {
 					e.printStackTrace();

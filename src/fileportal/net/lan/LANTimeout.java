@@ -15,17 +15,13 @@ public class LANTimeout {
 		m_user = user;
 		m_disc = discoverer;
 		m_timer = new Timer();
-		m_timer.schedule(
-				new DisconnectTask(),
-				(int) (NetworkConstants.BROADCAST_DELAY * NetworkConstants.TIMEOUT_MULTIPLE));
+		m_timer.schedule(new DisconnectTask(), (int) (NetworkConstants.BROADCAST_DELAY * NetworkConstants.TIMEOUT_MULTIPLE));
 	}
 
 	public void reset() {
 		m_timer.cancel();
 		m_timer = new Timer();
-		m_timer.schedule(
-				new DisconnectTask(),
-				(int) (NetworkConstants.BROADCAST_DELAY * NetworkConstants.TIMEOUT_MULTIPLE));
+		m_timer.schedule(new DisconnectTask(), (int) (NetworkConstants.BROADCAST_DELAY * NetworkConstants.TIMEOUT_MULTIPLE));
 	}
 
 	private class DisconnectTask extends TimerTask {

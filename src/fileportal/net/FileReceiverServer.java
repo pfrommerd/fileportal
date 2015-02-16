@@ -43,8 +43,7 @@ public class FileReceiverServer {
 			while (true) {
 				try {
 					Socket sock = m_serverSock.accept();
-					System.out
-							.println("FileReceiver: somebody wants to drop a file");
+					System.out.println("FileReceiver: somebody wants to drop a file");
 					Thread t = new Thread(new ClientHandler(sock));
 					t.start();
 				} catch (IOException e) {
@@ -63,8 +62,7 @@ public class FileReceiverServer {
 		public ClientHandler(Socket sock) {
 			m_sock = sock;
 			try {
-				m_reader = new BufferedReader(new InputStreamReader(
-						m_sock.getInputStream()));
+				m_reader = new BufferedReader(new InputStreamReader(m_sock.getInputStream()));
 				m_writer = new PrintWriter(m_sock.getOutputStream());
 				m_receive = new FileReceive(this);
 			} catch (IOException e) {
@@ -72,8 +70,8 @@ public class FileReceiverServer {
 			}
 		}
 
-		private long readFile(ZipInputStream zip, File file, long totalSize,
-				long read, List<TransferTracker> trackers) throws IOException {
+		private long readFile(ZipInputStream zip, File file, long totalSize, long read, List<TransferTracker> trackers)
+				throws IOException {
 			FileOutputStream fos = new FileOutputStream(file);
 
 			byte[] buffer = new byte[1024];
@@ -97,8 +95,7 @@ public class FileReceiverServer {
 			return read;
 		}
 
-		private void readFiles(long totalSize, File saveLoc,
-				List<TransferTracker> trackers) throws IOException {
+		private void readFiles(long totalSize, File saveLoc, List<TransferTracker> trackers) throws IOException {
 			ZipInputStream zip = new ZipInputStream(m_sock.getInputStream());
 			ZipEntry entry = zip.getNextEntry();
 
@@ -106,8 +103,7 @@ public class FileReceiverServer {
 
 			while (entry != null) {
 				File saveFile = new File(saveLoc, entry.getName());
-				System.out.println("FileReceiver: Unzipping: "
-						+ entry.getName());
+				System.out.println("FileReceiver: Unzipping: " + entry.getName());
 				// System.out.println("Total bytes read: " + read);
 
 				File parent = new File(saveFile.getParent());
@@ -161,8 +157,7 @@ public class FileReceiverServer {
 			m_writer.flush();
 
 			try {
-				readFiles(m_receive.getSize(), directory,
-						m_receive.getTrackers());
+				readFiles(m_receive.getSize(), directory, m_receive.getTrackers());
 				m_sock.close();
 			} catch (IOException e) {
 				e.printStackTrace();

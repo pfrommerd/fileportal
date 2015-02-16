@@ -34,13 +34,13 @@ public class FileNotification extends ComponentNotification {
 	private JLabel m_subtitleLabel;
 
 	private JLabel m_iconLabel;
-	
+
 	private JPanel m_buttonPanel;
-	
+
 	private JProgressBar m_progressBar;
 
 	private boolean m_accepted = false;
-	
+
 	public static final int ICON_PADDING = 10;
 
 	public FileNotification(BufferedImage icon, String msg, String subMsg) {
@@ -57,10 +57,10 @@ public class FileNotification extends ComponentNotification {
 		panel.add(m_titleLabel, BorderLayout.NORTH);
 		panel.add(m_subtitleLabel, BorderLayout.CENTER);
 		panel.setBorder(new EmptyBorder(0, ICON_PADDING, 0, 0));
-		
+
 		m_buttonPanel = new JPanel();
 		m_buttonPanel.setLayout(new FlowLayout());
-		
+
 		JButton accept = new JButton("Accept");
 		JButton decline = new JButton("Decline");
 
@@ -68,7 +68,7 @@ public class FileNotification extends ComponentNotification {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				m_accepted = true;
-				synchronized(FileNotification.this) {
+				synchronized (FileNotification.this) {
 					FileNotification.this.notifyAll();
 				}
 			}
@@ -77,19 +77,19 @@ public class FileNotification extends ComponentNotification {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				m_accepted = false;
-				synchronized(FileNotification.this) {
+				synchronized (FileNotification.this) {
 					FileNotification.this.notifyAll();
 				}
 			}
 		});
-		
+
 		m_buttonPanel.add(decline);
 		m_buttonPanel.add(accept);
-		
+
 		addComponent(m_iconLabel, BorderLayout.WEST);
 		addComponent(panel, BorderLayout.CENTER);
 		addComponent(m_buttonPanel, BorderLayout.SOUTH);
-		
+
 		setSize(300, 125);
 	}
 
@@ -133,43 +133,43 @@ public class FileNotification extends ComponentNotification {
 		m_subtitleLabel.setText(subtitle);
 		m_subtitle = subtitle;
 	}
-	
+
 	public boolean getAccept() {
-		synchronized(this) {
+		synchronized (this) {
 			try {
 				wait();
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+			}
 		}
 		return m_accepted;
 	}
-	
-	//Will switch to transfer mode
+
+	// Will switch to transfer mode
 	public void showTransfer() {
 		m_progressBar = new JProgressBar(0, 100);
 
 		removeComponent(m_buttonPanel);
 		addComponent(m_progressBar, BorderLayout.SOUTH);
 	}
-	
+
 	public void setTransferPercentage(float percent) {
 		m_progressBar.setValue((int) percent);
 	}
-	
-	public static class FileNotificationBuilder implements
-							NotificationBuilder {
+
+	public static class FileNotificationBuilder implements NotificationBuilder {
 		@Override
 		public Notification buildNotification(ThemePackage pack, Object[] args) {
 			FileNotification note = null;
 			if (args.length != 0) {
 				note = new FileNotification((BufferedImage) args[0], (String) args[1], (String) args[2]);
 			} else {
-				note = new FileNotification(PortalApp.DEFAULT_USER_ICON, "Accept", "");
+				note = new FileNotification(PortalConstants.DEFAULT_USER_ICON, "Accept", "");
 			}
 			note.setWindowTheme(pack.windowTheme);
 			return note;
 		}
 	}
-	
+
 	@Override
 	public void themeSet(WindowTheme theme) {
 		super.themeSet(theme);

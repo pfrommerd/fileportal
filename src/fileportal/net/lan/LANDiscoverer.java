@@ -28,8 +28,7 @@ public class LANDiscoverer implements Discoverer {
 
 	public LANDiscoverer(User thisUser) {
 		try {
-			m_sock = new DatagramSocket(NetworkConstants.BROADCAST_LISTEN_PORT,
-					InetAddress.getByName("0.0.0.0"));
+			m_sock = new DatagramSocket(NetworkConstants.BROADCAST_LISTEN_PORT, InetAddress.getByName("0.0.0.0"));
 			m_sock.setBroadcast(true);
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -98,8 +97,7 @@ public class LANDiscoverer implements Discoverer {
 			try {
 				while (true) {
 					byte[] recvBuf = new byte[15000];
-					DatagramPacket packet = new DatagramPacket(recvBuf,
-							recvBuf.length);
+					DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
 					m_sock.receive(packet);
 
 					String message = new String(packet.getData()).trim();
@@ -117,18 +115,14 @@ public class LANDiscoverer implements Discoverer {
 						User user = new User(name);
 						LANDriver driver = new LANDriver(packet.getAddress());
 						user.addDriver(driver);
-						m_timeouts.put(user, new LANTimeout(user,
-								LANDiscoverer.this));
+						m_timeouts.put(user, new LANTimeout(user, LANDiscoverer.this));
 
-						Socket iconSock = new Socket(packet.getAddress(),
-								NetworkConstants.ICON_PORT);
+						Socket iconSock = new Socket(packet.getAddress(), NetworkConstants.ICON_PORT);
 						user.setIcon(ImageIO.read(iconSock.getInputStream()));
 						iconSock.close();
 
-						System.out.println("LANDiscoverer: User discovered: "
-								+ user.getName());
-						System.out.println("LANDiscoverer: User discovered: "
-								+ user);
+						System.out.println("LANDiscoverer: User discovered: " + user.getName());
+						System.out.println("LANDiscoverer: User discovered: " + user);
 
 						m_connected.add(user);
 						for (DiscoverHandler handler : m_handlers) {

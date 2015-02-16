@@ -1,15 +1,12 @@
 package fileportal.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -40,81 +37,17 @@ import fileportal.net.lan.LANIconServer;
 public class PortalApp extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	public static final int TAB_WIDTH = 15;
-	public static final int TAB_HEIGHT = 300;
-	public static final int PANEL_WIDTH = 300;
-	public static final int PANEL_HEIGHT = 300;
-
-	public static final int Y_OFFSET = 30;
-
-	public static final int MOVE_SPEED = 1;
-
-	public static final int SCROLL_SPEED = 6;
-
-	public static final int GRID_SPACING = 10;
-
-	public static BufferedImage DEFAULT_USER_ICON = null;
-
-	public static BufferedImage PROFILE_SETTINGS_ICON = null;
-
-	public static final int PROFILE_BAR_HEIGHT = 32;
-
-	public static final int PROFILE_NAME_X_OFF = 5;
-	public static final int PROFILE_NAME_Y_OFF = 10;
-
-	// Should be the same as hover radius
-	public static final int PROFILE_NAME_LEADING_SPACE = 5;
-
-	public static final int LOADING_ARC_RADIUS = 56;
-
-	public static final float USER_FADE_RATE = 0.10f;
-
-	// Should be the same as hover radius
-	public static final int USER_ICON_TOP_SPACE = 20;
-
-	public static final int USER_ICON_WIDTH = 50;
-	public static final int USER_ICON_HEIGHT = 50;
-
-	public static final int USER_ICON_HOVER_RADIUS = 20;
-
-	public static final int USER_ICON_HOVER_SPEED = 6;
-
-	public static final int USER_NAME_SPACING = 5;
-	public static final int USER_MAX_NAME_WIDTH = 70;
-	public static final int USER_NAME_LINE_HEIGHT = 25;
-	public static final int USER_NAME_LINE_DESCENT = 5;
-
-	public static final int USER_NAME_MAX_CHARS = 10;
-
-	public static final int DIVIDER_THICKNESS = 1;
-
-	public static final Font PROFILE_FONT = new Font("Dialog", Font.BOLD, 16);
-	public static final Font USER_FONT = new Font("Dialog", Font.BOLD, 12);
-
-	public static final Color DIVIDER_COLOR = Color.GRAY;
-
-	public static final Color BACKGROUND_COLOR = Color.WHITE;
-	public static final Color FONT_COLOR = Color.GRAY;
-
-	public static final Color FILE_HOVER_COLOR = Color.GRAY;
-	public static final Color TRANSFER_PROGRESS_COLOR = new Color(0, 0, 139);
-
-	public static final Color EXIT_BUTTON_COLOR = Color.RED;
-
-	public static int SCREEN_WIDTH;
-	public static int SCREEN_HEIGHT;
-
 	static {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
 		Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
 
-		SCREEN_WIDTH = (int) rect.getWidth();
-		SCREEN_HEIGHT = (int) rect.getHeight();
+		PortalConstants.SCREEN_WIDTH = (int) rect.getWidth();
+		PortalConstants.SCREEN_HEIGHT = (int) rect.getHeight();
 
 		try {
-			DEFAULT_USER_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/unknown-user.png"));
-			PROFILE_SETTINGS_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/gear.png"));
+			PortalConstants.DEFAULT_USER_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/unknown-user.png"));
+			PortalConstants.PROFILE_SETTINGS_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/gear.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -126,8 +59,9 @@ public class PortalApp extends JFrame {
 	public PortalApp(User user) {
 		m_user = user;
 
-		setLocation(SCREEN_WIDTH - PANEL_WIDTH - TAB_WIDTH, Y_OFFSET);
-		setSize(PANEL_WIDTH + TAB_WIDTH, PANEL_HEIGHT);
+		setLocation(PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH - PortalConstants.TAB_WIDTH,
+				PortalConstants.Y_OFFSET);
+		setSize(PortalConstants.PANEL_WIDTH + PortalConstants.TAB_WIDTH, PortalConstants.PANEL_HEIGHT);
 
 		setUndecorated(true);
 		setAlwaysOnTop(true);
@@ -155,7 +89,7 @@ public class PortalApp extends JFrame {
 		m_discoveryPanel = new DiscoveryPanel(this);
 
 		JScrollPane scroll = new JScrollPane();
-		scroll.getVerticalScrollBar().setUnitIncrement(SCROLL_SPEED);
+		scroll.getVerticalScrollBar().setUnitIncrement(PortalConstants.SCROLL_SPEED);
 		scroll.setBorder(null);
 
 		scroll.getViewport().add(m_discoveryPanel);
@@ -175,7 +109,7 @@ public class PortalApp extends JFrame {
 	}
 
 	public boolean isPanelShowing() {
-		return getX() + TAB_WIDTH < SCREEN_WIDTH;
+		return getX() + PortalConstants.TAB_WIDTH < PortalConstants.SCREEN_WIDTH;
 	}
 
 	public void addDiscoverer(Discoverer d) {
@@ -199,10 +133,10 @@ public class PortalApp extends JFrame {
 
 	public void hidePanel() {
 		while (isPanelShowing()) {
-			int panelX = getX() + TAB_WIDTH;
-			int desX = SCREEN_WIDTH;
+			int panelX = getX() + PortalConstants.TAB_WIDTH;
+			int desX = PortalConstants.SCREEN_WIDTH;
 			int delta = desX - panelX;
-			int moveX = (int) (delta * MOVE_SPEED / 5f);
+			int moveX = (int) (delta * PortalConstants.MOVE_SPEED / 5f);
 			if (delta < 5) {
 				moveX = 1;
 			}
@@ -218,11 +152,11 @@ public class PortalApp extends JFrame {
 	}
 
 	public void showPanel() {
-		while (getX() > SCREEN_WIDTH - PANEL_WIDTH - TAB_WIDTH) {
-			int panelX = getX() + TAB_WIDTH;
-			int desX = SCREEN_WIDTH - PANEL_WIDTH;
+		while (getX() > PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH - PortalConstants.TAB_WIDTH) {
+			int panelX = getX() + PortalConstants.TAB_WIDTH;
+			int desX = PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH;
 			int delta = desX - panelX;
-			int moveX = (int) (delta * MOVE_SPEED / 5f);
+			int moveX = (int) (delta * PortalConstants.MOVE_SPEED / 5f);
 			if (delta > -5) {
 				moveX = -1;
 			}
@@ -245,7 +179,7 @@ public class PortalApp extends JFrame {
 
 		if (user == null) {
 			user = new User(System.getProperty("user.name"));
-			user.setIcon(DEFAULT_USER_ICON);
+			user.setIcon(PortalConstants.DEFAULT_USER_ICON);
 		}
 		final User u = user;
 
@@ -274,41 +208,6 @@ public class PortalApp extends JFrame {
 		icon.start();
 
 		FileReceiverServer server = new FileReceiverServer(new ReceiverHandler() {
-			/*
-			 * @Override public boolean shouldAccept(String userName,
-			 * int fileNum) { User user = disc.getUserForName(userName);
-			 * 
-			 * FileNotification note = (FileNotification) noteFactory
-			 * .build("accept", user.getIcon(), "Accept files form " +
-			 * userName, fileNum + " files from " + userName);
-			 * noteManager.addNotification(note, Time.infinite());
-			 * boolean accept = note.getAccept(); note.hide(); return
-			 * accept; }
-			 * 
-			 * @Override public File getFileSaveLocation(String name) {
-			 * return new File(System.getProperty("user.home") +
-			 * "/Desktop/" + name); }
-			 * 
-			 * @Override public File getFolderSaveLocation() { return
-			 * new File(System.getProperty("user.home") + "/Desktop/");
-			 * }
-			 * 
-			 * @Override public boolean shouldAccept(String userName,
-			 * String fileName) { User user =
-			 * disc.getUserForName(userName);
-			 * 
-			 * FileNotification note = (FileNotification) noteFactory
-			 * .build("accept", user.getIcon(), "Accept files form " +
-			 * userName, fileName + " from " + userName);
-			 * noteManager.addNotification(note, Time.infinite());
-			 * boolean accept = note.getAccept(); note.hide(); return
-			 * accept; }
-			 * 
-			 * @Override public void setProgressTracker(TransferTracker
-			 * tracker) {
-			 * 
-			 * }
-			 */
 
 			@Override
 			public void fileReceived(FileReceive receive) {

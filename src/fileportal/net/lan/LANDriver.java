@@ -48,8 +48,7 @@ public class LANDriver extends UserDriver {
 	private long m_totalSize = 0;
 	private long m_totalRead = 0;
 
-	private void recursiveZip(String root, File file, ZipOutputStream zos,
-			TransferTracker tracker) throws FileNotFoundException {
+	private void recursiveZip(String root, File file, ZipOutputStream zos, TransferTracker tracker) throws FileNotFoundException {
 		System.out.println("LANDriver: zipping file: " + file.getName());
 
 		if (file.isDirectory()) {
@@ -70,8 +69,7 @@ public class LANDriver extends UserDriver {
 					zos.write(buffer, 0, len);
 					m_totalRead += len;
 
-					tracker.setPercentage((double) 100 * m_totalRead
-							/ m_totalSize);
+					tracker.setPercentage((double) 100 * m_totalRead / m_totalSize);
 				}
 
 				fis.close();
@@ -91,29 +89,23 @@ public class LANDriver extends UserDriver {
 		final TransferTracker tracker = new TransferTracker(0);
 
 		try {
-			final Socket sock = new Socket(m_address,
-					NetworkConstants.FILE_PORT);
+			final Socket sock = new Socket(m_address, NetworkConstants.FILE_PORT);
 
 			Thread t = new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						PrintWriter writer = new PrintWriter(
-								sock.getOutputStream());
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(sock.getInputStream()));
-						ZipOutputStream zos = new ZipOutputStream(
-								sock.getOutputStream());
+						PrintWriter writer = new PrintWriter(sock.getOutputStream());
+						BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+						ZipOutputStream zos = new ZipOutputStream(sock.getOutputStream());
 						System.out.println("LANDriver: Writing file(s)");
 						if (files.length == 1) {
-							writer.write("Single: " + from.getName()
-									+ "---div---" + files[0].getName()
-									+ "---div---" + sizeOf(files) + "\n");
+							writer.write("Single: " + from.getName() + "---div---" + files[0].getName() + "---div---"
+									+ sizeOf(files) + "\n");
 							writer.flush();
 						} else {
-							writer.write("Multiple: " + from.getName()
-									+ "---div---" + files.length + "---div---"
-									+ sizeOf(files) + "\n");
+							writer.write("Multiple: " + from.getName() + "---div---" + files.length + "---div---" + sizeOf(files)
+									+ "\n");
 							writer.flush();
 						}
 
