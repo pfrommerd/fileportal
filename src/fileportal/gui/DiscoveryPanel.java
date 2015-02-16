@@ -32,12 +32,17 @@ public class DiscoveryPanel extends JPanel implements DiscoverHandler {
 
 	@Override
 	public void userDiscovered(User user) {
+		System.out.println("Discovered user(in panel) " + user.getName());
+
 		UserPanel p = new UserPanel(m_app, user);
 		m_panels.put(user, p);
 		add(p);
-
+		
 		revalidate();
 		repaint();
+		
+		//fade the panel in
+		p.fadeIn();
 	}
 
 	@Override

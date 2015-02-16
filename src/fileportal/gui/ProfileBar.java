@@ -68,11 +68,13 @@ public class ProfileBar extends JPanel {
 							remove(field);
 							add(m_name, BorderLayout.CENTER);
 							revalidate();
+							repaint();
 						}
 					});
 					remove(m_name);
 					add(field, BorderLayout.CENTER);
 					revalidate();
+					repaint();
 				}
 			}
 
@@ -101,15 +103,14 @@ public class ProfileBar extends JPanel {
 			@Override
 			public void nameChanged(String name) {
 				m_name.setText(" " + name);
+				repaint();
 			}
 
 			@Override
 			public void iconChanged(BufferedImage icon) {
-				System.out.println("Changing icon");
 				// Downscale the icon
 				Image img = icon.getScaledInstance(PortalConstants.PROFILE_BAR_HEIGHT, PortalConstants.PROFILE_BAR_HEIGHT,
 						Image.SCALE_SMOOTH);
-
 				remove(m_icon);
 
 				m_icon = new JLabel(new ImageIcon(img));
@@ -123,6 +124,12 @@ public class ProfileBar extends JPanel {
 		});
 	}
 
+	@Override
+	public void paint(Graphics g) {
+		RenderUtils.s_setupFineRender(g);
+		super.paint(g);
+	}
+	
 	@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(PortalConstants.PROFILE_BAR_HEIGHT, PortalConstants.PROFILE_BAR_HEIGHT);
@@ -151,7 +158,6 @@ public class ProfileBar extends JPanel {
 						}
 					}
 				}
-
 			}
 		}
 

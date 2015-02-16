@@ -1,8 +1,14 @@
 package fileportal.gui;
 
 import java.awt.Color;
+import java.awt.DisplayMode;
 import java.awt.Font;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class PortalConstants {
 	public static final int TAB_WIDTH = 15;
@@ -42,7 +48,7 @@ public class PortalConstants {
 
 	public static final int USER_ICON_HOVER_RADIUS = 20;
 
-	public static final int USER_ICON_HOVER_SPEED = 6;
+	public static final int USER_ICON_HOVER_SPEED = 3;
 
 	public static final int USER_NAME_SPACING = 5;
 	public static final int USER_MAX_NAME_WIDTH = 70;
@@ -68,4 +74,21 @@ public class PortalConstants {
 
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
+	
+	static {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		for (GraphicsDevice curGs : gs) {
+			DisplayMode mode = curGs.getDisplayMode();
+			PortalConstants.SCREEN_WIDTH += mode.getWidth();
+			PortalConstants.SCREEN_HEIGHT += mode.getHeight();
+		}
+
+		try {
+			PortalConstants.DEFAULT_USER_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/unknown-user.png"));
+			PortalConstants.PROFILE_SETTINGS_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/gear.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

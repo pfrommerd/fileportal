@@ -1,16 +1,10 @@
 package fileportal.gui;
 
 import java.awt.BorderLayout;
-import java.awt.DisplayMode;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,22 +20,7 @@ import fileportal.net.lan.LanIconServer;
 public class PortalApp extends JFrame {
 	private static final long serialVersionUID = 1L;
 
-	static {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice[] gs = ge.getScreenDevices();
-		for (GraphicsDevice curGs : gs) {
-			DisplayMode mode = curGs.getDisplayMode();
-			PortalConstants.SCREEN_WIDTH += mode.getWidth();
-			PortalConstants.SCREEN_HEIGHT += mode.getHeight();
-		}
 
-		try {
-			PortalConstants.DEFAULT_USER_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/unknown-user.png"));
-			PortalConstants.PROFILE_SETTINGS_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/gear.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	private User m_user;
 	private DiscoveryPanel m_discoveryPanel;
@@ -61,13 +40,7 @@ public class PortalApp extends JFrame {
 
 			@Override
 			public void paintComponent(Graphics g) {
-				Graphics2D g2d = (Graphics2D) g;
-
-				g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-				g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
+				RenderUtils.s_setupFineRender(g);
 				super.paintComponent(g);
 			}
 		};
@@ -111,20 +84,10 @@ public class PortalApp extends JFrame {
 		d.removeHandler(m_discoveryPanel);
 	}
 
-	public void run() {
-		while (true) {
-			repaint();
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public void hidePanel() {
-		this.setSize(60, 30);
-		this.setLocation(PortalConstants.SCREEN_WIDTH - 60, 0);
+		//The width of the tab + the height of the image(Profile bar height) + 1/2 height the bar(exit button width)
+		this.setSize(PortalConstants.TAB_WIDTH + (int) (1.5 * PortalConstants.PROFILE_BAR_HEIGHT), 30);
+		this.setLocation(PortalConstants.SCREEN_WIDTH - getWidth(), 0);
 	}
 
 	public void showPanel() {
@@ -176,8 +139,5 @@ public class PortalApp extends JFrame {
 
 		PortalApp app = new PortalApp(user);
 		app.addDiscoverer(disc);
-
-		// will run the main loop
-		app.run();
 	}
 }
