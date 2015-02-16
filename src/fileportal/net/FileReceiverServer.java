@@ -84,11 +84,6 @@ public class FileReceiverServer {
 				for (TransferTracker tracker : trackers) {
 					tracker.setPercentage((double) 100 * read / totalSize);
 				}
-				/*
-				 * System.out.println("Read: " + read);
-				 * System.out.println("Setting percentage: " + (double) 100 *
-				 * read / totalSize);
-				 */
 			}
 
 			fos.close();
@@ -103,8 +98,6 @@ public class FileReceiverServer {
 
 			while (entry != null) {
 				File saveFile = new File(saveLoc, entry.getName());
-				System.out.println("FileReceiver: Unzipping: " + entry.getName());
-				// System.out.println("Total bytes read: " + read);
 
 				File parent = new File(saveFile.getParent());
 

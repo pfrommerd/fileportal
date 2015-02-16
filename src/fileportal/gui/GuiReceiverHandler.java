@@ -22,7 +22,9 @@ public class GuiReceiverHandler implements ReceiverHandler {
 	private NotificationFactory m_factory;
 	private NotificationManager m_manager;
 
-	public GuiReceiverHandler() {
+	public GuiReceiverHandler(Discoverer disc) {
+		m_disc = disc;
+
 		m_factory = new NotificationFactory(ThemePackagePresets.cleanLight());
 		m_manager = new QueueManager(Location.NORTHWEST);
 		m_factory.addBuilder("accept", new FileNotificationBuilder());

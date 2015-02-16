@@ -49,8 +49,6 @@ public class LanDriver extends UserDriver {
 	private long m_totalRead = 0;
 
 	private void recursiveZip(String root, File file, ZipOutputStream zos, TransferTracker tracker) throws FileNotFoundException {
-		System.out.println("LANDriver: zipping file: " + file.getName());
-
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
 

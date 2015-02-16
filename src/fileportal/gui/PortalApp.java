@@ -168,7 +168,7 @@ public class PortalApp extends JFrame {
 		LanIconServer icon = new LanIconServer(user);
 		icon.start();
 
-		FileReceiverServer server = new FileReceiverServer(new GuiReceiverHandler());
+		FileReceiverServer server = new FileReceiverServer(new GuiReceiverHandler(disc));
 		server.start();
 
 		disc.start();
