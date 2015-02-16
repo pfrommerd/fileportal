@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +28,7 @@ public class LanDiscoverer implements Discoverer {
 	private DatagramSocket m_sock;
 	private Thread m_listener;
 
-	public LanDiscoverer(User thisUser) {
+	public LanDiscoverer() {
 		try {
 			m_sock = new DatagramSocket(NetworkConstants.BROADCAST_LISTEN_PORT, InetAddress.getByName("0.0.0.0"));
 			m_sock.setBroadcast(true);
@@ -35,8 +37,6 @@ public class LanDiscoverer implements Discoverer {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-
-		m_connected.add(thisUser);
 	}
 
 	protected void userTimeout(User user) {
@@ -100,14 +100,28 @@ public class LanDiscoverer implements Discoverer {
 		@Override
 		public void run() {
 			try {
-				while (true) {
+				loop: while (true) {
 					byte[] recvBuf = new byte[15000];
 					DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
 					m_sock.receive(packet);
+					
+					Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+					while(e.hasMoreElements()) {
+						NetworkInterface n =  e.nextElement();
+						Enumeration<InetAddress> ee = n.getInetAddresses();
+						while (ee.hasMoreElements()) {
+							InetAddress i = ee.nextElement();
+							if (packet.getAddress().equals(i)) continue loop;
+						}
+					}
+
+					if (packet.getAddress().equals(InetAddress.getLocalHost()))
+						continue;
 
 					String message = new String(packet.getData()).trim();
 					if (message.contains("User: ")) {
 						String name = message.substring(6);
+						
 						if (isConnected(name)) {
 							User user = getUserForName(name);
 							if (m_timeouts.containsKey(user)) {

@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import fileportal.net.DiscoverHandler;
 import fileportal.net.Discoverer;
 import fileportal.net.User;
 import fileportal.net.UserUtils;
@@ -69,6 +70,10 @@ public class PortalApp extends JFrame {
 	public User getUser() {
 		return m_user;
 	}
+	
+	public DiscoverHandler getDiscHandler() {
+		return m_discoveryPanel;
+	}
 
 	public boolean isPanelShowing() {
 		return this.getWidth() > 100;
@@ -123,7 +128,7 @@ public class PortalApp extends JFrame {
 		});
 
 		// Now start the main app
-		LanDiscoverer disc = new LanDiscoverer(user);
+		LanDiscoverer disc = new LanDiscoverer();
 		LanBroadcaster broad = new LanBroadcaster(user);
 
 		LanIconServer icon = new LanIconServer(user);
@@ -136,6 +141,9 @@ public class PortalApp extends JFrame {
 		broad.start();
 
 		PortalApp app = new PortalApp(user);
+		for (User us : disc.getConnectedUsers()) {
+			app.getDiscHandler().userDiscovered(us);
+		}
 		app.addDiscoverer(disc);
 	}
 }

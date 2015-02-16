@@ -183,7 +183,7 @@ public class UserPanel extends JPanel {
 			g2d.fillArc(-((PortalConstants.LOADING_ARC_RADIUS - PortalConstants.USER_ICON_WIDTH) >> 1),
 					-((PortalConstants.LOADING_ARC_RADIUS - PortalConstants.USER_ICON_HEIGHT) >> 1),
 					PortalConstants.LOADING_ARC_RADIUS, PortalConstants.LOADING_ARC_RADIUS, 90, -deg);
-			if (m_currentTransfer.getPercentage() >= 100) {
+			if (m_currentTransfer.getPercentage() >= 99) {
 				m_currentTransfer = null;
 			}
 		}
