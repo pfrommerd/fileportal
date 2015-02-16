@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import fileportal.net.FileReceiverServer.ClientHandler;
+import fileportal.net.lan.LanFileReceiverServer.ClientHandler;
 
 public class FileReceive {
 	private List<TransferTracker> m_trackers = new ArrayList<TransferTracker>();
