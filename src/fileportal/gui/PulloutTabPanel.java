@@ -1,6 +1,5 @@
 package fileportal.gui;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -15,7 +14,7 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private PortalApp m_app;
-	
+
 	public PulloutTabPanel(PortalApp app) {
 		m_app = app;
 		setForeground(PortalApp.BACKGROUND_COLOR);
@@ -24,13 +23,14 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 
 		addMouseListener(this);
 	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		int halfWidth = (int) (getWidth() * 0.5f);
-		//int halfHeight = (int) (getHeight() * 0.5f);
+		// int halfHeight = (int) (getHeight() * 0.5f);
 		int halfHeight = (int) (Math.min(PortalApp.TAB_HEIGHT, getHeight()) * 0.5f);
 		if (m_app.isPanelShowing()) {
 			g2d.drawLine(5, halfHeight + 10, halfWidth, halfHeight);
@@ -40,19 +40,31 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 			g2d.drawLine(5, halfHeight, halfWidth, halfHeight - 10);
 		}
 	}
+
+	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (m_app.isPanelShowing()) m_app.hidePanel();
-		else m_app.showPanel();
+		if (m_app.isPanelShowing())
+			m_app.hidePanel();
+		else
+			m_app.showPanel();
 	}
+
+	@Override
 	public void mousePressed(MouseEvent e) {
 
 	}
+
+	@Override
 	public void mouseReleased(MouseEvent e) {
 
 	}
+
+	@Override
 	public void mouseEntered(MouseEvent e) {
 
 	}
+
+	@Override
 	public void mouseExited(MouseEvent e) {
 
 	}
@@ -63,4 +75,3 @@ public class PulloutTabPanel extends JPanel implements MouseListener {
 	}
 
 }
-

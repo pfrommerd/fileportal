@@ -105,8 +105,7 @@ public class PortalApp extends JFrame {
 	public static int SCREEN_HEIGHT;
 
 	static {
-		GraphicsEnvironment ge = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
 		Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
 
@@ -114,10 +113,8 @@ public class PortalApp extends JFrame {
 		SCREEN_HEIGHT = (int) rect.getHeight();
 
 		try {
-			DEFAULT_USER_ICON = ImageIO.read(PortalApp.class
-					.getResourceAsStream("/unknown-user.png"));
-			PROFILE_SETTINGS_ICON = ImageIO.read(PortalApp.class
-					.getResourceAsStream("/gear.png"));
+			DEFAULT_USER_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/unknown-user.png"));
+			PROFILE_SETTINGS_ICON = ImageIO.read(PortalApp.class.getResourceAsStream("/gear.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -138,17 +135,14 @@ public class PortalApp extends JFrame {
 		JPanel main = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void paintComponent(Graphics g) {
 				Graphics2D g2d = (Graphics2D) g;
 
-				g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-						RenderingHints.VALUE_ANTIALIAS_ON);
-				g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-						RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-				g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
-						RenderingHints.VALUE_RENDER_QUALITY);
+				g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+				g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
 				super.paintComponent(g);
 			}
@@ -244,8 +238,7 @@ public class PortalApp extends JFrame {
 		User user = null;
 
 		try {
-			user = UserUtils.s_readUser(new File(System
-					.getProperty("user.home") + "/.fileportal"));
+			user = UserUtils.s_readUser(new File(System.getProperty("user.home") + "/.fileportal"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -257,12 +250,11 @@ public class PortalApp extends JFrame {
 		final User u = user;
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				if (u != null) {
 					try {
-						UserUtils.s_saveUser(u,
-								new File(System.getProperty("user.home")
-										+ "/.fileportal"));
+						UserUtils.s_saveUser(u, new File(System.getProperty("user.home") + "/.fileportal"));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -271,10 +263,8 @@ public class PortalApp extends JFrame {
 		});
 
 		// Now start the main app
-		final NotificationFactory noteFactory = new NotificationFactory(
-				ThemePackagePresets.cleanLight());
-		final NotificationManager noteManager = new QueueManager(
-				PopupLocation.NORTHWEST);
+		final NotificationFactory noteFactory = new NotificationFactory(ThemePackagePresets.cleanLight());
+		final NotificationManager noteManager = new QueueManager(PopupLocation.NORTHWEST);
 		noteFactory.addBuilder("accept", new FileNotificationBuilder());
 
 		final LANDiscoverer disc = new LANDiscoverer(user);
@@ -283,99 +273,91 @@ public class PortalApp extends JFrame {
 		LANIconServer icon = new LANIconServer(user);
 		icon.start();
 
-		FileReceiverServer server = new FileReceiverServer(
-				new ReceiverHandler() {
-					/*
-					 * @Override public boolean shouldAccept(String userName,
-					 * int fileNum) { User user = disc.getUserForName(userName);
-					 * 
-					 * FileNotification note = (FileNotification) noteFactory
-					 * .build("accept", user.getIcon(), "Accept files form " +
-					 * userName, fileNum + " files from " + userName);
-					 * noteManager.addNotification(note, Time.infinite());
-					 * boolean accept = note.getAccept(); note.hide(); return
-					 * accept; }
-					 * 
-					 * @Override public File getFileSaveLocation(String name) {
-					 * return new File(System.getProperty("user.home") +
-					 * "/Desktop/" + name); }
-					 * 
-					 * @Override public File getFolderSaveLocation() { return
-					 * new File(System.getProperty("user.home") + "/Desktop/");
-					 * }
-					 * 
-					 * @Override public boolean shouldAccept(String userName,
-					 * String fileName) { User user =
-					 * disc.getUserForName(userName);
-					 * 
-					 * FileNotification note = (FileNotification) noteFactory
-					 * .build("accept", user.getIcon(), "Accept files form " +
-					 * userName, fileName + " from " + userName);
-					 * noteManager.addNotification(note, Time.infinite());
-					 * boolean accept = note.getAccept(); note.hide(); return
-					 * accept; }
-					 * 
-					 * @Override public void setProgressTracker(TransferTracker
-					 * tracker) {
-					 * 
-					 * }
-					 */
+		FileReceiverServer server = new FileReceiverServer(new ReceiverHandler() {
+			/*
+			 * @Override public boolean shouldAccept(String userName,
+			 * int fileNum) { User user = disc.getUserForName(userName);
+			 * 
+			 * FileNotification note = (FileNotification) noteFactory
+			 * .build("accept", user.getIcon(), "Accept files form " +
+			 * userName, fileNum + " files from " + userName);
+			 * noteManager.addNotification(note, Time.infinite());
+			 * boolean accept = note.getAccept(); note.hide(); return
+			 * accept; }
+			 * 
+			 * @Override public File getFileSaveLocation(String name) {
+			 * return new File(System.getProperty("user.home") +
+			 * "/Desktop/" + name); }
+			 * 
+			 * @Override public File getFolderSaveLocation() { return
+			 * new File(System.getProperty("user.home") + "/Desktop/");
+			 * }
+			 * 
+			 * @Override public boolean shouldAccept(String userName,
+			 * String fileName) { User user =
+			 * disc.getUserForName(userName);
+			 * 
+			 * FileNotification note = (FileNotification) noteFactory
+			 * .build("accept", user.getIcon(), "Accept files form " +
+			 * userName, fileName + " from " + userName);
+			 * noteManager.addNotification(note, Time.infinite());
+			 * boolean accept = note.getAccept(); note.hide(); return
+			 * accept; }
+			 * 
+			 * @Override public void setProgressTracker(TransferTracker
+			 * tracker) {
+			 * 
+			 * }
+			 */
+
+			@Override
+			public void fileReceived(FileReceive receive) {
+				User user = disc.getUserForName(receive.getFromUser());
+
+				String message = null;
+				if (receive.isIsSingleFile()) {
+					message = receive.getFileName() + " from " + receive.getFromUser();
+				} else {
+					message = receive.getNumFiles() + " files from " + receive.getFromUser();
+				}
+
+				final FileNotification note = (FileNotification) noteFactory.build("accept", user.getIcon(), "Accept files from "
+						+ receive.getFromUser(), message);
+				noteManager.addNotification(note, Time.infinite());
+
+				boolean accept = note.getAccept();
+				note.showTransfer();
+
+				TransferTracker tracker = new TransferTracker(0) {
+					private int lastPercent = 0;
 
 					@Override
-					public void fileReceived(FileReceive receive) {
-						User user = disc.getUserForName(receive.getFromUser());
+					public void setPercentage(double percentage) {
+						super.setPercentage(percentage);
 
-						String message = null;
-						if (receive.isIsSingleFile()) {
-							message = receive.getFileName() + " from "
-									+ receive.getFromUser();
-						} else {
-							message = receive.getNumFiles() + " files from "
-									+ receive.getFromUser();
-						}
+						int percent = (int) percentage;
+						if (percent - lastPercent < 1)
+							return;
 
-						FileNotification note = (FileNotification) noteFactory
-								.build("accept",
-										user.getIcon(),
-										"Accept files from "
-												+ receive.getFromUser(),
-										message);
-						noteManager.addNotification(note, Time.infinite());
-
-						boolean accept = note.getAccept();
-						note.showTransfer();
-
-						TransferTracker tracker = new TransferTracker(0) {
-							private int lastPercent = 0;
-
-							@Override
-							public void setPercentage(double percentage) {
-								super.setPercentage(percentage);
-
-								int percent = (int) percentage;
-								if (percent - lastPercent < 1)
-									return;
-
-								if (percent >= 99)
-									note.hide();
-								else
-									note.setTransferPercentage((float) percent);
-
-								lastPercent = percent;
-
-							}
-						};
-						receive.addProgressTracker(tracker);
-
-						if (accept) {
-							receive.accept(new File(System
-									.getProperty("user.home") + "/Desktop/"));
-						} else {
-							receive.decline();
+						if (percent >= 99)
 							note.hide();
-						}
+						else
+							note.setTransferPercentage(percent);
+
+						lastPercent = percent;
+
 					}
-				});
+				};
+				receive.addProgressTracker(tracker);
+
+				if (accept) {
+					receive.accept(new File(System.getProperty("user.home") + "/Desktop/"));
+				} else {
+					receive.decline();
+					note.hide();
+				}
+			}
+		});
 		server.start();
 
 		disc.start();

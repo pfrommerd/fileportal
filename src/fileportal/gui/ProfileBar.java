@@ -2,7 +2,6 @@ package fileportal.gui;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,37 +25,36 @@ import javax.swing.JTextField;
 import fileportal.net.User;
 import fileportal.net.User.UserListener;
 
-
 public class ProfileBar extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private User m_user;
-	
+
 	private JLabel m_icon;
 	private JLabel m_name;
-	
+
 	public ProfileBar(User u) {
 		m_user = u;
-		
+
 		setLayout(new BorderLayout());
-		
+
 		setBorder(BorderFactory.createMatteBorder(0, 0, PortalApp.DIVIDER_THICKNESS, 0, PortalApp.DIVIDER_COLOR));
 		setForeground(PortalApp.BACKGROUND_COLOR);
 		setBackground(PortalApp.BACKGROUND_COLOR);
-		
-		//Downscale the icon
+
+		// Downscale the icon
 		Image img = u.getIcon().getScaledInstance(PortalApp.PROFILE_BAR_HEIGHT, PortalApp.PROFILE_BAR_HEIGHT, Image.SCALE_SMOOTH);
-		
+
 		m_icon = new JLabel(new ImageIcon(img));
 		m_icon.addMouseListener(new IconMouseListener());
-		
+
 		m_name = new JLabel(" " + u.getName());
-		
+
 		m_name.setForeground(PortalApp.FONT_COLOR);
 		m_name.setFont(PortalApp.PROFILE_FONT);
 
 		add(m_name, BorderLayout.CENTER);
-		
+
 		m_name.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -75,17 +73,25 @@ public class ProfileBar extends JPanel {
 					add(field, BorderLayout.CENTER);
 					revalidate();
 				}
-			} 
+			}
+
 			@Override
-			public void mousePressed(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {
+			}
+
 			@Override
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {
+			}
+
 			@Override
-			public void mouseEntered(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {
+			}
+
 			@Override
-			public void mouseExited(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {
+			}
 		});
-		
+
 		add(m_icon, BorderLayout.WEST);
 		add(m_name, BorderLayout.CENTER);
 		add(new ExitPanel(), BorderLayout.EAST);
@@ -99,39 +105,38 @@ public class ProfileBar extends JPanel {
 			@Override
 			public void iconChanged(BufferedImage icon) {
 				System.out.println("Changing icon");
-				//Downscale the icon
-				Image img = icon.getScaledInstance(PortalApp.PROFILE_BAR_HEIGHT, 
-								PortalApp.PROFILE_BAR_HEIGHT, Image.SCALE_SMOOTH);
-				
+				// Downscale the icon
+				Image img = icon
+						.getScaledInstance(PortalApp.PROFILE_BAR_HEIGHT, PortalApp.PROFILE_BAR_HEIGHT, Image.SCALE_SMOOTH);
+
 				remove(m_icon);
-				
+
 				m_icon = new JLabel(new ImageIcon(img));
 				m_icon.addMouseListener(new IconMouseListener());
-				
+
 				add(m_icon, BorderLayout.WEST);
-				
+
 				revalidate();
 				repaint();
 			}
 		});
 	}
-	
+
 	@Override
 	public Dimension getMinimumSize() {
-		return new Dimension(PortalApp.PROFILE_BAR_HEIGHT,
-							 PortalApp.PROFILE_BAR_HEIGHT);
+		return new Dimension(PortalApp.PROFILE_BAR_HEIGHT, PortalApp.PROFILE_BAR_HEIGHT);
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
 		return getMinimumSize();
 	}
-	
+
 	public class IconMouseListener implements MouseListener {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getClickCount() == 2) {
-				//Select the next image
+				// Select the next image
 				JFileChooser chooser = new JFileChooser();
 				int returnVal = chooser.showOpenDialog(null);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -148,25 +153,34 @@ public class ProfileBar extends JPanel {
 
 			}
 		}
+
 		@Override
-		public void mousePressed(MouseEvent e) {}
+		public void mousePressed(MouseEvent e) {
+		}
+
 		@Override
-		public void mouseReleased(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {
+		}
+
 		@Override
-		public void mouseEntered(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {
+		}
+
 		@Override
-		public void mouseExited(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {
+		}
 	}
+
 	public class ExitPanel extends JPanel implements MouseListener {
 		private static final long serialVersionUID = 1L;
-		
+
 		public ExitPanel() {
 			setForeground(PortalApp.BACKGROUND_COLOR);
 			setBackground(PortalApp.BACKGROUND_COLOR);
-			
+
 			addMouseListener(this);
 		}
-		
+
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -183,11 +197,12 @@ public class ProfileBar extends JPanel {
 			g2d.setComposite(ac);
 			g2d.fillRect(0, 0, getWidth(), getHeight() / 2);
 		}
+
 		@Override
 		public Dimension getMinimumSize() {
-			return new Dimension(PortalApp.PROFILE_BAR_HEIGHT / 2,
-								 PortalApp.PROFILE_BAR_HEIGHT);
+			return new Dimension(PortalApp.PROFILE_BAR_HEIGHT / 2, PortalApp.PROFILE_BAR_HEIGHT);
 		}
+
 		@Override
 		public Dimension getPreferredSize() {
 			return getMinimumSize();
@@ -197,21 +212,25 @@ public class ProfileBar extends JPanel {
 		public void mouseClicked(MouseEvent e) {
 			System.exit(0);
 		}
+
 		@Override
 		public void mousePressed(MouseEvent e) {
 
 		}
+
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			
+
 		}
+
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			
+
 		}
+
 		@Override
 		public void mouseExited(MouseEvent e) {
-			
+
 		}
 	}
 
