@@ -1,9 +1,13 @@
 package fileportal.net;
 
+import java.util.List;
+
 public interface Discoverer {
 	public void addHandler(DiscoverHandler handler);
 
 	public void removeHandler(DiscoverHandler handler);
+
+	public List<User> getConnectedUsers();
 
 	/**
 	 * @param userName
