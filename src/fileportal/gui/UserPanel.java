@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import fileportal.net.TransferTracker;
+import fileportal.net.TransferTracker.TransferListener;
 import fileportal.net.User;
 import fileportal.net.User.UserListener;
 
@@ -285,6 +286,17 @@ public class UserPanel extends JPanel {
 						@SuppressWarnings("unchecked")
 						List<File> files = (List<File>) transferable.getTransferData(flavor);
 						m_currentTransfer = m_user.sendFiles(files.toArray(new File[0]), m_app.getUser());
+						m_currentTransfer.addListener(new TransferListener(){
+							private double m_lastPercent;
+							
+							@Override
+							public void percentageChanged(double newPercentage) {
+								if (newPercentage - m_lastPercent > 1) {
+									UserPanel.this.repaint();
+									m_lastPercent = newPercentage;
+								}
+							}
+						});
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
