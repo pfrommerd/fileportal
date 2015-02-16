@@ -10,17 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fileportal.net.Discoverer;
-import fileportal.net.FileReceiverServer;
 import fileportal.net.User;
 import fileportal.net.UserUtils;
 import fileportal.net.lan.LanBroadcaster;
 import fileportal.net.lan.LanDiscoverer;
+import fileportal.net.lan.LanFileReceiverServer;
 import fileportal.net.lan.LanIconServer;
 
 public class PortalApp extends JFrame {
 	private static final long serialVersionUID = 1L;
-
-
 
 	private User m_user;
 	private DiscoveryPanel m_discoveryPanel;
@@ -131,7 +129,7 @@ public class PortalApp extends JFrame {
 		LanIconServer icon = new LanIconServer(user);
 		icon.start();
 
-		FileReceiverServer server = new FileReceiverServer(new GuiReceiverHandler());
+		LanFileReceiverServer server = new LanFileReceiverServer(new GuiReceiverHandler(disc));
 		server.start();
 
 		disc.start();

@@ -1,4 +1,4 @@
-package fileportal.net;
+package fileportal.net.lan;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,12 +12,17 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class FileReceiverServer {
+import fileportal.net.FileReceive;
+import fileportal.net.NetworkConstants;
+import fileportal.net.ReceiverHandler;
+import fileportal.net.TransferTracker;
+
+public class LanFileReceiverServer {
 	private ServerSocket m_serverSock;
 	private ReceiverHandler m_handler;
 	private Thread m_serverThread;
 
-	public FileReceiverServer(ReceiverHandler handler) {
+	public LanFileReceiverServer(ReceiverHandler handler) {
 		m_handler = handler;
 
 		try {
@@ -84,11 +89,6 @@ public class FileReceiverServer {
 				for (TransferTracker tracker : trackers) {
 					tracker.setPercentage((double) 100 * read / totalSize);
 				}
-				/*
-				 * System.out.println("Read: " + read);
-				 * System.out.println("Setting percentage: " + (double) 100 *
-				 * read / totalSize);
-				 */
 			}
 
 			fos.close();
@@ -103,8 +103,6 @@ public class FileReceiverServer {
 
 			while (entry != null) {
 				File saveFile = new File(saveLoc, entry.getName());
-				System.out.println("FileReceiver: Unzipping: " + entry.getName());
-				// System.out.println("Total bytes read: " + read);
 
 				File parent = new File(saveFile.getParent());
 

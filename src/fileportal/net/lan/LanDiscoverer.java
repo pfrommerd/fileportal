@@ -40,7 +40,7 @@ public class LanDiscoverer implements Discoverer {
 	}
 
 	protected void userTimeout(User user) {
-		System.out.println("User timeout: " + user.getName());
+		System.out.println("LANDiscoverer: User timeout: " + user.getName());
 		m_connected.remove(user);
 		for (DiscoverHandler handler : m_handlers) {
 			handler.userDisconnected(user);

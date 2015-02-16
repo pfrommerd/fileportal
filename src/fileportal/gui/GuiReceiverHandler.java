@@ -14,6 +14,7 @@ import fileportal.net.Discoverer;
 import fileportal.net.FileReceive;
 import fileportal.net.ReceiverHandler;
 import fileportal.net.TransferTracker;
+import fileportal.net.TransferTracker.TransferListener;
 import fileportal.net.User;
 
 public class GuiReceiverHandler implements ReceiverHandler {
@@ -21,7 +22,9 @@ public class GuiReceiverHandler implements ReceiverHandler {
 	private NotificationFactory m_factory;
 	private NotificationManager m_manager;
 
-	public GuiReceiverHandler() {
+	public GuiReceiverHandler(Discoverer disc) {
+		m_disc = disc;
+
 		m_factory = new NotificationFactory(ThemePackagePresets.cleanLight());
 		m_manager = new QueueManager(Location.NORTHWEST);
 		m_factory.addBuilder("accept", new FileNotificationBuilder());
@@ -45,13 +48,12 @@ public class GuiReceiverHandler implements ReceiverHandler {
 		boolean accept = note.getAccept();
 		note.showTransfer();
 
-		TransferTracker tracker = new TransferTracker(0) {
+		TransferTracker tracker = new TransferTracker();
+		tracker.addListener(new TransferListener() {
 			private int lastPercent = 0;
 
 			@Override
-			public void setPercentage(double percentage) {
-				super.setPercentage(percentage);
-
+			public void percentageChanged(double percentage) {
 				int percent = (int) percentage;
 				if (percent - lastPercent < 1)
 					return;
@@ -62,9 +64,9 @@ public class GuiReceiverHandler implements ReceiverHandler {
 					note.setTransferPercentage(percent);
 
 				lastPercent = percent;
-
 			}
-		};
+		});
+
 		receive.addProgressTracker(tracker);
 
 		if (accept) {

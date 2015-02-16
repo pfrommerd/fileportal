@@ -78,8 +78,8 @@ public class PortalConstants {
 	static {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();
-		for (GraphicsDevice curGs : gs) {
-			DisplayMode mode = curGs.getDisplayMode();
+		for (GraphicsDevice device : gs) {
+			DisplayMode mode = device.getDisplayMode();
 			PortalConstants.SCREEN_WIDTH += mode.getWidth();
 			PortalConstants.SCREEN_HEIGHT += mode.getHeight();
 		}
