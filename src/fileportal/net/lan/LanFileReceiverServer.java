@@ -155,10 +155,18 @@ public class LanFileReceiverServer {
 			m_writer.flush();
 
 			try {
-				readFiles(m_receive.getSize(), directory, m_receive.getTrackers());
-				m_sock.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+				try {
+					readFiles(m_receive.getSize(), directory, m_receive.getTrackers());
+					m_sock.close();
+				} catch (IOException e) {
+
+				}
+			} finally {
+				try {
+					m_sock.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
