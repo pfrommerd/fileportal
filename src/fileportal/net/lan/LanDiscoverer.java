@@ -49,11 +49,13 @@ public class LanDiscoverer implements Discoverer {
 
 	@Override
 	public void addHandler(DiscoverHandler handler) {
+		System.out.println("LANDiscoverer: Handler added");
 		m_handlers.add(handler);
 	}
 
 	@Override
 	public void removeHandler(DiscoverHandler handler) {
+		System.out.println("LANDiscoverer: Handler removed");
 		m_handlers.remove(handler);
 	}
 
@@ -119,10 +121,10 @@ public class LanDiscoverer implements Discoverer {
 						user.setIcon(ImageIO.read(iconSock.getInputStream()));
 						iconSock.close();
 
-						System.out.println("LANDiscoverer: User discovered: " + user.getName());
-						System.out.println("LANDiscoverer: User discovered: " + user);
-
 						m_connected.add(user);
+
+						System.out.println("LANDiscoverer: User discovered: " + user.getName());
+						System.out.println("LANDiscoverer: Notifying " + m_handlers.size() + " handlers");
 						for (DiscoverHandler handler : m_handlers) {
 							handler.userDiscovered(user);
 						}
