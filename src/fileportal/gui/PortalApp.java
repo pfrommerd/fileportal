@@ -70,7 +70,7 @@ public class PortalApp extends JFrame {
 	public User getUser() {
 		return m_user;
 	}
-	
+
 	public DiscoverHandler getDiscHandler() {
 		return m_discoveryPanel;
 	}
@@ -88,7 +88,7 @@ public class PortalApp extends JFrame {
 	}
 
 	public void hidePanel() {
-		//The width of the tab + the height of the image(Profile bar height) + 1/2 height the bar(exit button width)
+		// The width of the tab + the height of the image(Profile bar height) + 1/2 height the bar(exit button width)
 		this.setSize(PortalConstants.TAB_WIDTH + (int) (1.5 * PortalConstants.PROFILE_BAR_HEIGHT), 30);
 		this.setLocation(PortalConstants.SCREEN_WIDTH - getWidth(), 0);
 	}

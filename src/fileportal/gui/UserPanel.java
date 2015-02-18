@@ -46,7 +46,6 @@ public class UserPanel extends JPanel {
 	private String m_userName;
 	private Image m_userImg = null;
 
-
 	private boolean m_hovering = false;
 	private int m_hoverCircleWidth = PortalConstants.USER_ICON_WIDTH;
 	private int m_hoverCircleHeight = PortalConstants.USER_ICON_HEIGHT;
@@ -55,7 +54,7 @@ public class UserPanel extends JPanel {
 	private float m_alpha = 0f;
 
 	private Timer m_hoverRepaintTimer;
-	
+
 	private User m_user;
 
 	public UserPanel(PortalApp app, User u) {
@@ -67,13 +66,13 @@ public class UserPanel extends JPanel {
 		setBackground(PortalConstants.BACKGROUND_COLOR);
 
 		m_user = u;
-		
+
 		m_userName = m_user.getName();
-		
+
 		// Downscale the icon
 		m_userImg = m_user.getIcon().getScaledInstance(PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT,
-														Image.SCALE_SMOOTH);
-		
+				Image.SCALE_SMOOTH);
+
 		m_user.addListener(new UserListener() {
 			@Override
 			public void nameChanged(String name) {
@@ -84,18 +83,21 @@ public class UserPanel extends JPanel {
 			public void iconChanged(BufferedImage icon) {
 				// Downscale the icon
 				m_userImg = icon.getScaledInstance(PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT,
-													 Image.SCALE_SMOOTH);
+						Image.SCALE_SMOOTH);
 			}
 		});
-		
+
 		m_hoverRepaintTimer = new Timer(16, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (m_hovering) animateHoverCircleGrow();
-				else animateHoverCircleShrink();
-				
+				if (m_hovering)
+					animateHoverCircleGrow();
+				else
+					animateHoverCircleShrink();
+
 				boolean shrinkWidth = m_hoverCircleWidth > PortalConstants.USER_ICON_WIDTH;
 				boolean shrinkHeight = m_hoverCircleHeight > PortalConstants.USER_ICON_HEIGHT;
-				
+
 				if (!m_hovering && !shrinkWidth && !shrinkHeight) {
 					m_hoverRepaintTimer.stop();
 				}
@@ -122,7 +124,7 @@ public class UserPanel extends JPanel {
 		g2.fillOval(0, 0, PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT);
 
 		g2.setComposite(AlphaComposite.SrcAtop);
-		
+
 		// Draw the icon to the image
 		g2.drawImage(m_userImg2, 0, 0, PortalConstants.USER_ICON_WIDTH, PortalConstants.USER_ICON_HEIGHT, null);
 		g2.dispose();
@@ -132,7 +134,7 @@ public class UserPanel extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		//For when we just call repaint() from this panel
+		// For when we just call repaint() from this panel
 		RenderUtils.s_setupFineRender(g);
 		super.paintComponent(g);
 
@@ -159,7 +161,7 @@ public class UserPanel extends JPanel {
 		g2d.setFont(PortalConstants.USER_FONT);
 
 		g2d.drawString(text, halfWidth - (textWidth >> 1), PortalConstants.USER_ICON_TOP_SPACE + PortalConstants.USER_ICON_HEIGHT
-						+ PortalConstants.USER_NAME_SPACING + PortalConstants.USER_NAME_LINE_HEIGHT);
+				+ PortalConstants.USER_NAME_SPACING + PortalConstants.USER_NAME_LINE_HEIGHT);
 
 		BufferedImage icon = m_clippedImg;
 		if (icon == null)
@@ -196,7 +198,7 @@ public class UserPanel extends JPanel {
 		// Copy our intermediate image to the screen
 		g2d.drawImage(m_clippedImg, 0, 0, null);
 	}
-	
+
 	public void animateHoverCircleShrink() {
 		boolean shrinkWidth = m_hoverCircleWidth > PortalConstants.USER_ICON_WIDTH;
 		boolean shrinkHeight = m_hoverCircleHeight > PortalConstants.USER_ICON_HEIGHT;
@@ -208,12 +210,10 @@ public class UserPanel extends JPanel {
 		}
 		repaint();
 	}
-	
+
 	public void animateHoverCircleGrow() {
-		boolean growWidth = m_hoverCircleWidth < 
-				PortalConstants.USER_ICON_WIDTH + PortalConstants.USER_ICON_HOVER_RADIUS;
-		boolean growHeight = m_hoverCircleHeight <
-				PortalConstants.USER_ICON_HEIGHT + PortalConstants.USER_ICON_HOVER_RADIUS;
+		boolean growWidth = m_hoverCircleWidth < PortalConstants.USER_ICON_WIDTH + PortalConstants.USER_ICON_HOVER_RADIUS;
+		boolean growHeight = m_hoverCircleHeight < PortalConstants.USER_ICON_HEIGHT + PortalConstants.USER_ICON_HOVER_RADIUS;
 		if (growWidth) {
 			m_hoverCircleWidth += PortalConstants.USER_ICON_HOVER_SPEED;
 		}
@@ -222,7 +222,7 @@ public class UserPanel extends JPanel {
 		}
 		repaint();
 	}
-	
+
 	public void fadeIn() {
 		while (m_alpha < 1) {
 			m_alpha += PortalConstants.USER_FADE_RATE;
@@ -234,6 +234,7 @@ public class UserPanel extends JPanel {
 			repaint();
 		}
 	}
+
 	public void fadeOut() {
 		while (m_alpha > 0) {
 			m_alpha -= PortalConstants.USER_FADE_RATE;
@@ -267,10 +268,10 @@ public class UserPanel extends JPanel {
 			if (loc.getY() > dim.getHeight() || loc.getX() > dim.getWidth()) {
 				return;
 			}
-			
+
 			// Accept copy drops
 			event.acceptDrop(DnDConstants.ACTION_COPY);
-			
+
 			m_hovering = false;
 
 			// Get the transfer which can provide the dropped item data
@@ -286,15 +287,22 @@ public class UserPanel extends JPanel {
 						@SuppressWarnings("unchecked")
 						List<File> files = (List<File>) transferable.getTransferData(flavor);
 						m_currentTransfer = m_user.sendFiles(files.toArray(new File[0]), m_app.getUser());
-						m_currentTransfer.addListener(new TransferListener(){
+						m_currentTransfer.addListener(new TransferListener() {
 							private double m_lastPercent;
-							
+
 							@Override
 							public void percentageChanged(double newPercentage) {
 								if (newPercentage - m_lastPercent > 1 || newPercentage >= 99) {
 									UserPanel.this.repaint();
 									m_lastPercent = newPercentage;
 								}
+							}
+
+							@Override
+							public void canceled() {
+								m_currentTransfer = null;
+
+								UserPanel.this.repaint();
 							}
 						});
 					}
@@ -319,7 +327,7 @@ public class UserPanel extends JPanel {
 			Dimension dim = UserPanel.this.getPreferredSize();
 			Point loc = event.getLocation();
 			if (loc.getY() < dim.getHeight() && loc.getX() < dim.getWidth()) {
-				if (!m_hovering) {					
+				if (!m_hovering) {
 					m_hovering = true;
 					m_hoverRepaintTimer.start();
 				}

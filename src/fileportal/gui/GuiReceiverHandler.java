@@ -1,11 +1,13 @@
 package fileportal.gui;
 
+import java.awt.Font;
 import java.io.File;
 
 import com.manager.NotificationManager;
 import com.manager.QueueManager;
 import com.notification.NotificationFactory;
 import com.notification.NotificationFactory.Location;
+import com.theme.ThemePackage;
 import com.theme.ThemePackagePresets;
 import com.utils.Time;
 
@@ -25,7 +27,11 @@ public class GuiReceiverHandler implements ReceiverHandler {
 	public GuiReceiverHandler(Discoverer disc) {
 		m_disc = disc;
 
-		m_factory = new NotificationFactory(ThemePackagePresets.cleanLight());
+		ThemePackage theme = ThemePackagePresets.cleanLight();
+		theme.textTheme.title = new Font(theme.textTheme.title.getFontName(), theme.textTheme.title.getStyle(), 15);
+		theme.textTheme.subtitle = new Font(theme.textTheme.subtitle.getFontName(), theme.textTheme.subtitle.getStyle(), 15);
+
+		m_factory = new NotificationFactory(theme);
 		m_manager = new QueueManager(Location.NORTHWEST);
 		m_factory.addBuilder("accept", new FileNotificationBuilder());
 	}
@@ -36,9 +42,9 @@ public class GuiReceiverHandler implements ReceiverHandler {
 
 		String message = null;
 		if (receive.isIsSingleFile()) {
-			message = receive.getFileName() + " from " + receive.getFromUser();
+			message = receive.getFileName();
 		} else {
-			message = receive.getNumFiles() + " files from " + receive.getFromUser();
+			message = receive.getNumFiles() + " files";
 		}
 
 		final FileNotification note = (FileNotification) m_factory.build("accept", user.getIcon(),
@@ -46,7 +52,8 @@ public class GuiReceiverHandler implements ReceiverHandler {
 		m_manager.addNotification(note, Time.infinite());
 
 		boolean accept = note.getAccept();
-		if (accept) note.showTransfer();
+		if (accept)
+			note.showTransfer();
 
 		TransferTracker tracker = new TransferTracker();
 		tracker.addListener(new TransferListener() {
@@ -64,6 +71,11 @@ public class GuiReceiverHandler implements ReceiverHandler {
 					note.setTransferPercentage(percent);
 
 				lastPercent = percent;
+			}
+
+			@Override
+			public void canceled() {
+				note.hide();
 			}
 		});
 

@@ -59,22 +59,25 @@ public class LanDriver extends UserDriver {
 			FileInputStream fis = new FileInputStream(file);
 			ZipEntry entry = new ZipEntry(root + file.getName());
 			try {
-				zos.putNextEntry(entry);
+				try {
+					zos.putNextEntry(entry);
 
-				byte[] buffer = new byte[1024];
-				int len;
-				while ((len = fis.read(buffer)) > 0) {
-					zos.write(buffer, 0, len);
-					m_totalRead += len;
+					byte[] buffer = new byte[1024];
+					int len;
+					while ((len = fis.read(buffer)) > 0) {
+						zos.write(buffer, 0, len);
+						m_totalRead += len;
 
-					tracker.setPercentage((double) 100 * m_totalRead / m_totalSize);
+						tracker.setPercentage((double) 100 * m_totalRead / m_totalSize);
+					}
+
+					zos.flush();
+				} finally {
+					fis.close();
+					zos.closeEntry();
 				}
-
-				fis.close();
-				zos.closeEntry();
-				zos.flush();
 			} catch (IOException e) {
-				e.printStackTrace();
+				tracker.canceled();
 			}
 		}
 	}
@@ -123,8 +126,11 @@ public class LanDriver extends UserDriver {
 						}
 
 						sock.close();
+
+						tracker.setPercentage(100);
 					} catch (IOException e) {
 						e.printStackTrace();
+						tracker.canceled();
 					}
 				}
 			});

@@ -3,11 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/commons-compress-1.9.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/fileportal/lib/commons-compress-1.9-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/JCommunique"/>
+	<classpathentry kind="lib" path="lib/jcommunique-1.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
