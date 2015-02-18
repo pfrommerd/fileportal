@@ -116,6 +116,10 @@ public class LanFileReceiverServer {
 				entry = zip.getNextEntry();
 			}
 			zip.close();
+
+			for (TransferTracker tracker : trackers) {
+				tracker.setPercentage(100);
+			}
 		}
 
 		@Override
@@ -162,6 +166,9 @@ public class LanFileReceiverServer {
 
 				}
 			} finally {
+				for (TransferTracker tracker : m_receive.getTrackers()) {
+					tracker.canceled();
+				}
 				try {
 					m_sock.close();
 				} catch (IOException e) {

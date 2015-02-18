@@ -55,7 +55,15 @@ public class TransferTracker {
 		}
 	}
 
+	public void canceled() {
+		for (TransferListener listener : m_listeners) {
+			listener.canceled();
+		}
+	}
+
 	public static interface TransferListener {
 		public void percentageChanged(double newPercentage);
+
+		public void canceled();
 	}
 }

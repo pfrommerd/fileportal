@@ -1,6 +1,7 @@
 package fileportal.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -16,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.notification.Notification;
 import com.notification.NotificationBuilder;
-import com.notification.types.ComponentNotification;
+import com.notification.types.BorderLayoutNotification;
 import com.theme.TextTheme;
 import com.theme.ThemePackage;
 import com.theme.WindowTheme;
@@ -24,16 +25,15 @@ import com.theme.WindowTheme;
 /**
  * An IconNotification displays text, but with an icon.
  */
-public class FileNotification extends ComponentNotification {
+public class FileNotification extends BorderLayoutNotification {
 	private TextTheme m_theme;
-
-	private String m_title;
-	private String m_subtitle;
 
 	private JLabel m_titleLabel;
 	private JLabel m_subtitleLabel;
 
 	private JLabel m_iconLabel;
+	private JButton m_accept;
+	private JButton m_decline;
 
 	private JPanel m_buttonPanel;
 
@@ -45,8 +45,8 @@ public class FileNotification extends ComponentNotification {
 
 	public FileNotification(BufferedImage icon, String msg, String subMsg) {
 		Image img = icon;
-		if (icon.getWidth() != 64 || icon.getHeight() != 64) {
-			img = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+		if (icon.getWidth() != 40 || icon.getHeight() != 40) {
+			img = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		}
 		m_iconLabel = new JLabel();
 		m_iconLabel.setIcon(new ImageIcon(img));
@@ -59,12 +59,14 @@ public class FileNotification extends ComponentNotification {
 		panel.setBorder(new EmptyBorder(0, ICON_PADDING, 0, 0));
 
 		m_buttonPanel = new JPanel();
-		m_buttonPanel.setLayout(new FlowLayout());
+		m_buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 2));
 
-		JButton accept = new JButton("Accept");
-		JButton decline = new JButton("Decline");
+		m_accept = new JButton("Accept");
+		m_decline = new JButton("Decline");
+		m_accept.setPreferredSize(new Dimension(100, 20));
+		m_decline.setPreferredSize(new Dimension(100, 20));
 
-		accept.addActionListener(new ActionListener() {
+		m_accept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				m_accepted = true;
@@ -73,7 +75,7 @@ public class FileNotification extends ComponentNotification {
 				}
 			}
 		});
-		decline.addActionListener(new ActionListener() {
+		m_decline.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				m_accepted = false;
@@ -83,8 +85,9 @@ public class FileNotification extends ComponentNotification {
 			}
 		});
 
-		m_buttonPanel.add(decline);
-		m_buttonPanel.add(accept);
+		m_buttonPanel.add(m_decline);
+		m_buttonPanel.add(m_accept);
+		m_buttonPanel.setPreferredSize(m_buttonPanel.getPreferredSize());
 
 		addComponent(m_iconLabel, BorderLayout.WEST);
 		addComponent(panel, BorderLayout.CENTER);
@@ -112,26 +115,32 @@ public class FileNotification extends ComponentNotification {
 	 */
 	public void setTextTheme(TextTheme theme) {
 		m_theme = theme;
+
 		m_titleLabel.setFont(theme.title);
 		m_subtitleLabel.setFont(theme.subtitle);
+		m_accept.setFont(theme.subtitle);
+		m_decline.setFont(theme.subtitle);
+
+		m_titleLabel.setForeground(m_theme.titleColor);
+		m_subtitleLabel.setForeground(m_theme.subtitleColor);
+		m_accept.setForeground(m_theme.subtitleColor);
+		m_decline.setForeground(m_theme.subtitleColor);
 	}
 
 	public String getTitle() {
-		return m_title;
+		return m_titleLabel.getText();
 	}
 
 	public void setTitle(String title) {
 		m_titleLabel.setText(title);
-		m_title = title;
 	}
 
 	public String getSubtitle() {
-		return m_subtitle;
+		return m_subtitleLabel.getText();
 	}
 
 	public void setSubtitle(String subtitle) {
 		m_subtitleLabel.setText(subtitle);
-		m_subtitle = subtitle;
 	}
 
 	public boolean getAccept() {
@@ -147,6 +156,7 @@ public class FileNotification extends ComponentNotification {
 	// Will switch to transfer mode
 	public void showTransfer() {
 		m_progressBar = new JProgressBar(0, 100);
+		m_progressBar.setPreferredSize(new Dimension(200, 25));
 
 		removeComponent(m_buttonPanel);
 		addComponent(m_progressBar, BorderLayout.SOUTH);
@@ -154,6 +164,18 @@ public class FileNotification extends ComponentNotification {
 
 	public void setTransferPercentage(float percent) {
 		m_progressBar.setValue((int) percent);
+	}
+
+	@Override
+	public void themeSet(WindowTheme theme) {
+		super.themeSet(theme);
+
+		if (m_theme != null) {
+			m_titleLabel.setForeground(m_theme.titleColor);
+			m_subtitleLabel.setForeground(m_theme.subtitleColor);
+			m_accept.setForeground(m_theme.subtitleColor);
+			m_decline.setForeground(m_theme.subtitleColor);
+		}
 	}
 
 	public static class FileNotificationBuilder implements NotificationBuilder {
@@ -166,17 +188,8 @@ public class FileNotification extends ComponentNotification {
 				note = new FileNotification(PortalConstants.DEFAULT_USER_ICON, "Accept", "");
 			}
 			note.setWindowTheme(pack.windowTheme);
+			note.setTextTheme(pack.textTheme);
 			return note;
 		}
-	}
-
-	@Override
-	public void themeSet(WindowTheme theme) {
-		super.themeSet(theme);
-		m_titleLabel.setBackground(theme.background);
-		m_subtitleLabel.setBackground(theme.background);
-
-		m_titleLabel.setForeground(theme.foreground);
-		m_subtitleLabel.setForeground(theme.foreground);
 	}
 }
