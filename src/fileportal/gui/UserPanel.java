@@ -291,7 +291,7 @@ public class UserPanel extends JPanel {
 							
 							@Override
 							public void percentageChanged(double newPercentage) {
-								if (newPercentage - m_lastPercent > 1) {
+								if (newPercentage - m_lastPercent > 1 || newPercentage >= 99) {
 									UserPanel.this.repaint();
 									m_lastPercent = newPercentage;
 								}
