@@ -207,7 +207,7 @@ public class ProfileBar extends JPanel {
 
 		@Override
 		public Dimension getMinimumSize() {
-			return new Dimension(PortalConstants.PROFILE_BAR_HEIGHT / 2, PortalConstants.PROFILE_BAR_HEIGHT);
+			return new Dimension(PortalConstants.PROFILE_BAR_HEIGHT / 2, PortalConstants.PROFILE_BAR_HEIGHT / 2);
 		}
 
 		@Override
@@ -217,7 +217,7 @@ public class ProfileBar extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.exit(0);
+			if (e.getY() < PortalConstants.PROFILE_BAR_HEIGHT / 2) System.exit(0);
 		}
 
 		@Override
