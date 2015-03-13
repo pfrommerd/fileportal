@@ -90,12 +90,12 @@ public class PortalApp extends JFrame {
 	public void hidePanel() {
 		// The width of the tab + the height of the image(Profile bar height) + 1/2 height the bar(exit button width)
 		this.setSize(PortalConstants.TAB_WIDTH + (int) (1.5 * PortalConstants.PROFILE_BAR_HEIGHT), 30);
-		this.setLocation(PortalConstants.SCREEN_WIDTH - getWidth(), 0);
+		this.setLocation(PortalConstants.SCREEN_WIDTH - getWidth(), PortalConstants.Y_OFFSET);
 	}
 
 	public void showPanel() {
 		this.setSize(PortalConstants.PANEL_WIDTH, PortalConstants.PANEL_HEIGHT);
-		this.setLocation(PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH, 0);
+		this.setLocation(PortalConstants.SCREEN_WIDTH - PortalConstants.PANEL_WIDTH, PortalConstants.Y_OFFSET);
 	}
 
 	public static void main(String[] args) {
